@@ -1,15 +1,15 @@
 import Image from 'next/image';
-import MainImagePen from '@/public/images/MainImage_Pen.jpg';
+import MainImagePen from '@/public/images/MainImage_Pen_Cut.png';
 
 export default function Home() {
 	return (
 		<div className="w-full h-full">
-			<div className="h-g3">
+			<div className="flex items-center justify-center h-g2">
 				<Image
 					src={MainImagePen}
 					alt="MainImage_Pen"
 					priority
-					className="object-cover w-full h-full"
+					className="object-cover"
 				/>
 			</div>
 			<div className="w-full flex flex-col p-3 space-y-1">
