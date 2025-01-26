@@ -1,27 +1,18 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import React from 'react';
+
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { Button } from '@material-tailwind/react';
 
 const SessionPage = () => {
-  const { data: session } = useSession();
+	const { data: session } = useSession();
 
-  if (session) {
-    console.log(session);
-    return (
-      <>
-        Signed in 완료 <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    );
-  }
+	if (session) {
+		return <Button onClick={() => signOut()}>Sign out</Button>;
+	}
 
-  return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
-  );
+	return <Button onClick={() => signIn()}>Sign in</Button>;
 };
 
 export default SessionPage;

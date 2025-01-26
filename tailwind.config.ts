@@ -1,10 +1,18 @@
 import type { Config } from 'tailwindcss';
+const withMT = require('@material-tailwind/react/utils/withMT');
 
-const config: Config = {
+const config: Config = withMT({
 	content: [
 		'./pages/**/*.{js,ts,jsx,tsx,mdx}',
 		'./components/**/*.{js,ts,jsx,tsx,mdx}',
 		'./app/**/*.{js,ts,jsx,tsx,mdx}',
+		'./processes/**/*.{js,ts,jsx,tsx,mdx}',
+		'./entities/**/*.{js,ts,jsx,tsx,mdx}',
+		'./features/**/*.{js,ts,jsx,tsx,mdx}',
+		'./widgets/**/*.{js,ts,jsx,tsx,mdx}',
+		'./shared/**/*.{js,ts,jsx,tsx,mdx}',
+		'./node_modules/@material-tailwind/react/components/**/*.{js,ts,jsx,tsx,mdx}',
+		'./node_modules/@material-tailwind/react/theme/comonents/**/*.{js,ts,jsx,tsx,mdx}',
 	],
 	theme: {
 		extend: {
@@ -31,7 +39,19 @@ const config: Config = {
 				md: '640px',
 			},
 		},
+
+		iconButton: {
+			defaultProps: {
+				variant: 'filled',
+				size: 'md',
+				color: 'blue',
+				fullWidth: true,
+				ripple: true,
+				className: '',
+			},
+		},
 	},
 	plugins: [],
-};
+});
+
 export default config;

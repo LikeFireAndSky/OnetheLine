@@ -1,35 +1,60 @@
-import Image from 'next/image';
-import MainImagePen from '@/public/images/MainImage_Pen_Cut.png';
-import Log from '@/components/ReadingLog/Log';
-import LinkButton from '@/components/common/LinkButton';
+'use client';
 
-const longSampleData = {
-	title: 'Title',
-	content:
-		'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vel suscipit nisl. Nullam vitae dolor nec nisi fermentum ultricies. Nullam',
-	date: '2021-10-01',
+import React from 'react';
+import { useInView, animated } from '@react-spring/web';
+import MainLog from '@/entities/line/ui/MainLog';
+import { useGetLine } from '@/entities/line/api/useGetLine';
+import LinkButton from '@/entities/line/ui/LinkButton';
+import LinkCard from '../entities/line/ui/LinkCard';
+
+const Home = () => {
+	const [ref, inView] = useInView(() => ({
+		from: { opacity: 0 },
+		to: { opacity: 1 },
+		config: {
+			mass: 5,
+			friction: 120,
+			tension: 120,
+		},
+	}));
+
+	const { data, isLoading, isError } = useGetLine();
+
+	return (
+		<animated.section
+			ref={ref}
+			style={inView}
+			className="w-full h-full flex flex-col p-3 mt-3 space-y-5"
+		>
+			<div className="w-full flex flex-col space-y-1">
+				<h1 className="text-2xl font-semibold">One the Line</h1>
+				<p className="text-base">하루를 바꿀 문장을 기록하세요.</p>
+			</div>
+			<MainLog
+				data={data}
+				isLoading={isLoading}
+				isError={isError}
+			/>
+			<div className="w-full grid grid-cols-2 gap-3">
+				<LinkButton types="record" />
+				<LinkButton types="view" />
+			</div>
+			<div className="w-full grid grid-cols-2 gap-3">
+				<LinkCard
+					types="totalBooks"
+					data={data}
+					isLoading={isLoading}
+					isError={isError}
+				/>
+				<LinkCard
+					types="totalSentences"
+					data={data}
+					isLoading={isLoading}
+					isError={isError}
+				/>
+			</div>
+		</animated.section>
+	);
 };
 
-export default function Home() {
-	return (
-		<main className="w-full h-full flex flex-col">
-			<Image
-				src={MainImagePen}
-				alt="MainImage_Pen"
-				priority
-				className="object-cover h-g2 w-full mx-auto"
-			/>
-			<section className="w-full flex flex-col flex-grow p-3 space-y-1">
-				<div className="w-full flex flex-col p-3 space-y-1">
-					<h1 className="text-5xl">OnetheLine</h1>
-					<p className="text-xl">
-						Just one line, the wonderful underline for reading log
-					</p>
-				</div>
-				<h2 className="text-2xl">Today&apos;s reading log</h2>
-				<Log {...longSampleData} />
-				<LinkButton />
-			</section>
-		</main>
-	);
-}
+export default Home;
