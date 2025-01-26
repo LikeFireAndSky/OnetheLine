@@ -16,7 +16,7 @@ export const useGetLine = () => {
 	const { data: session } = useSession();
 
 	if (!session) {
-		redirect('/login');
+		redirect('/');
 	}
 
 	const userId = session.userId as string;
@@ -25,6 +25,8 @@ export const useGetLine = () => {
 		queryKey: ['getLine', userId],
 		queryFn: () => getLine(userId as string),
 		retry: 3,
+
+		enabled: !!userId,
 	});
 	return query;
 };

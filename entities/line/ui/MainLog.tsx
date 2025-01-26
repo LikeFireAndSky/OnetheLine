@@ -45,7 +45,7 @@ const MainLog = ({
 						color="black"
 						className="text-base font-medium"
 					>
-						"{contentText}"
+						&quot;{contentText}&quot;
 					</Typography>
 					<div className="w-full flex justify-end text-xs items-center space-x-1">
 						<CalendarDateRangeIcon className="w-4 h-4" />
