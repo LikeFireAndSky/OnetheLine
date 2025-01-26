@@ -9,6 +9,8 @@ export const useMainLog = ({
 	isLoading: boolean;
 	isError: boolean;
 }) => {
+	console.log(data);
+
 	const returnData = {
 		contentText: isLoading
 			? '로딩중...'
