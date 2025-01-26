@@ -3,6 +3,8 @@
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from '@material-tailwind/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const ClientProvider = ({
 	children,
@@ -11,10 +13,24 @@ const ClientProvider = ({
 	children: React.ReactNode;
 	session: any;
 }) => {
+	const [queryClient] = React.useState(
+		() =>
+			new QueryClient({
+				defaultOptions: {
+					queries: {
+						refetchOnWindowFocus: false,
+					},
+				},
+			}),
+	);
+
 	return (
-		<SessionProvider session={session}>
-			<ThemeProvider>{children}</ThemeProvider>
-		</SessionProvider>
+		<QueryClientProvider client={queryClient}>
+			<SessionProvider session={session}>
+				<ThemeProvider>{children}</ThemeProvider>
+				<ReactQueryDevtools initialIsOpen={false} />
+			</SessionProvider>
+		</QueryClientProvider>
 	);
 };
 

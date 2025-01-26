@@ -17,3 +17,11 @@ declare module 'next-auth' {
 		};
 	}
 }
+
+declare module 'react' {
+	interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+		placeholder?: string; // placeholder 속성 추가
+		onPointerEnterCapture?: () => void; // onPointerEnterCapture 속성 추가
+		onPointerLeaveCapture?: () => void; // onPointerLeaveCapture 속성 추가
+	}
+}

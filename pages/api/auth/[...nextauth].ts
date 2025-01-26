@@ -1,6 +1,6 @@
 import GoogleProvider from 'next-auth/providers/google';
 import NextAuth, { getServerSession } from 'next-auth';
-import { getUserById, saveUser } from '@/lib/user';
+import { getUserById, saveUser } from '@/processes/user/api/saveUser';
 
 export type SessionType = {
 	user: {
@@ -55,7 +55,7 @@ const authOptions = {
 		},
 	},
 
-	secret: process.env.SECRET,
+	secret: process.env.NEXTAUTH_SECRET,
 };
 
 export const getSession = () => getServerSession(authOptions);

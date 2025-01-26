@@ -1,6 +1,6 @@
 // lib/user.js
 import { GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { ddbDocClient } from './ddbDocClient'; // DynamoDB 클라이언트
+import { ddbDocClient } from '../lib/ddbDocClient'; // DynamoDB 클라이언트
 
 /**
  * userId로 유저 정보 조회
@@ -32,7 +32,6 @@ export async function getUserById(userId: string) {
 			return null;
 		}
 	} catch (error) {
-		console.error('Error fetching user from DynamoDB:', error);
 		throw new Error('Error fetching user');
 	}
 }
@@ -70,9 +69,7 @@ export async function saveUser({
 	try {
 		const command = new PutItemCommand(params);
 		await ddbDocClient.send(command);
-		console.log('User saved successfully:', userId);
 	} catch (error) {
-		console.error('Error saving user to DynamoDB:', error);
 		throw new Error('Error saving user');
 	}
 }
