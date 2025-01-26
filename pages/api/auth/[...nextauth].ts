@@ -11,7 +11,7 @@ export type SessionType = {
 	accessToken: string;
 };
 
-const authOptions = {
+export const authOptions = {
 	providers: [
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID as string,

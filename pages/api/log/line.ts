@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ddbDocClient } from '@/processes/user/lib/ddbDocClient';
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -12,8 +14,16 @@ export default async function handler(
 		return;
 	}
 
-	// Get user ID from the header
-	const userId = req.headers['x-user-id'];
+	// Get user session using NextAuth
+	const session = await getServerSession(req, res, authOptions);
+
+	if (!session || !session.user) {
+		res.status(401).json({ message: 'Unauthorized' });
+		return;
+	}
+
+	// Extract user ID from session
+	const userId = session.userId; // `id`는 세션 사용자 객체에 저장된 ID 키 (필요에 따라 확인)
 
 	// Validate required fields
 	if (!userId) {
