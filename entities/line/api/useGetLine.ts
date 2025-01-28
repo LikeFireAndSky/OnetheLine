@@ -11,6 +11,8 @@ export const useGetLine = () => {
 		queryKey: ['getLine'],
 		queryFn: getLine,
 		retry: 1,
+
+		staleTime: 1000 * 60 * 60 * 12,
 	});
 	return query;
 };
