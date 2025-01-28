@@ -1,14 +1,22 @@
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
+export const config = {
+	matcher: ['/((?!term|privacy|welcome).*)'], // '/' 포함, '/term', '/privacy' 제외
+};
+
 export default withAuth(
 	function middleware(req) {
-		const { pathname } = req.nextUrl;
 		const isLoggedIn = !!req.nextauth.token;
+		const path = req.nextUrl.pathname;
+
+		if (path === '/term' || path === '/privacy') {
+			return NextResponse.next();
+		}
 
 		// 로그인하지 않은 경우에 대한 리다이렉트 조건
-		if (!isLoggedIn && !['/', '/term', '/privacy'].includes(pathname)) {
-			return NextResponse.redirect(new URL('/term', req.url));
+		if (!isLoggedIn) {
+			return NextResponse.redirect(process.env.NEXTAUTH_URL + '/term');
 		}
 
 		return NextResponse.next();
@@ -21,7 +29,3 @@ export default withAuth(
 		secret: process.env.NEXTAUTH_SECRET, // 환경 변수 설정
 	},
 );
-
-export const config = {
-	matcher: ['/', '/((?!term|privacy).*)'], // '/' 포함, '/term', '/privacy' 제외
-};
