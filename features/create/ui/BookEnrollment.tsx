@@ -122,7 +122,7 @@ const BookEnrollment = () => {
 					type="submit"
 					className="ml-auto"
 				>
-					Add Sentence
+					문장 추가하기
 				</Button>
 			</div>
 		</form>
