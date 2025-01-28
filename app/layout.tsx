@@ -9,6 +9,7 @@ import ClientProvider from '@/components/common/ClientProvider';
 import { getSession } from '@/pages/api/auth/[...nextauth]';
 import Header from '@/widgets/header/ui/Header';
 import Footer from '@/widgets/footer/ui/Footer';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const inter = Gothic_A1({ weight: '300', subsets: ['latin'] });
 
@@ -37,6 +38,7 @@ export default async function RootLayout({
 					</div>
 				</ClientProvider>
 			</body>
+			<GoogleAnalytics gaId="G-TC19MPLBYW" />
 		</html>
 	);
 }
