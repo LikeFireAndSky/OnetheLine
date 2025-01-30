@@ -18,8 +18,6 @@ const Page = () => {
 		},
 	}));
 
-	const { data: session } = useSession();
-
 	return (
 		<animated.section
 			ref={ref}
