@@ -3,9 +3,7 @@ import {
 	Input,
 	Option,
 	Select,
-	Spinner,
 	Textarea,
-	Typography,
 } from '@material-tailwind/react';
 import React from 'react';
 import { Controller } from 'react-hook-form';
@@ -127,9 +125,8 @@ const BookEnrollment = () => {
 					disabled={mutationLoading}
 				>
 					{mutationLoading ? (
-						<span className="flex items-center gap-1">
+						<span className="flex items-center gap-1 animate-pulse">
 							등록 중...
-							<Spinner className="h-3" />
 						</span>
 					) : (
 						<span className="flex items-center gap-1">
