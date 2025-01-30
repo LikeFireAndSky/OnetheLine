@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useInView, animated } from '@react-spring/web';
 import MainLog from '@/entities/line/ui/MainLog';
 import { useGetLine } from '@/entities/line/api/useGetLine';
@@ -20,7 +20,6 @@ const Home = () => {
 		},
 	}));
 
-	const { data: session } = useSession();
 	const { data, isLoading, isError } = useGetLine();
 
 	return (
@@ -39,13 +38,18 @@ const Home = () => {
 				isError={isError}
 			/>
 			<div className={`w-full gap-3`}>
-				{session ? (
+				{data && data.isAuthenticated ? (
 					<div className="w-full grid grid-cols-2 gap-3">
 						<LinkButton types="record" />
 						<LinkButton types="view" />
 					</div>
 				) : (
-					<LogInButton />
+					<LogInButton
+						isAuthenticated={
+							data && data.isAuthenticated ? data.isAuthenticated : false
+						}
+						isLoading={isLoading}
+					/>
 				)}
 			</div>
 			<div className="w-full grid grid-cols-2 gap-3">

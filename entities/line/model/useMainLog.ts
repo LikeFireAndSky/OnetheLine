@@ -17,7 +17,7 @@ export const useMainLog = ({
 			: isError
 			? '에러가 발생했습니다.'
 			: !data.isAuthenticated
-			? '하단 로그인 버튼을 눌러 로그인을 한 후 앞으로의 하루들을 바꿀 문장들을 기록하세요.'
+			? '로그인 후 앞으로의 하루들을 바꿀 문장들을 기록하세요.'
 			: data.isEnrolled && data.data
 			? data.data.Content
 			: '앞으로의 하루를 바꿀 책의 구절을 지금 바로 기록하세요.',
@@ -35,7 +35,7 @@ export const useMainLog = ({
 			: isError
 			? '에러가 발생했습니다.'
 			: !data.isAuthenticated
-			? '미상'
+			? '로'
 			: data.isEnrolled && data.data
 			? data.data.BookAuthor
 			: '',
@@ -45,7 +45,7 @@ export const useMainLog = ({
 			: isError
 			? '에러가 발생했습니다.'
 			: !data.isAuthenticated
-			? '미상'
+			? '그인'
 			: data.isEnrolled && data.data
 			? data.data.BookPublisher
 			: '',
