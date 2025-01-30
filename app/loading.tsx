@@ -3,16 +3,13 @@
 import { Spinner } from '@material-tailwind/react';
 import React from 'react';
 
-const loading = () => {
+const Loading = () => {
 	return (
 		<div className="w-full h-full flex flex-col gap-3 justify-center items-center">
 			<p className=" font-light animate-pulse">로딩중...</p>
-			<Spinner
-				onPointerEnterCapture={false}
-				onPointerLeaveCapture={false}
-			/>
+			<Spinner />
 		</div>
 	);
 };
 
-export default loading;
+export default Loading;

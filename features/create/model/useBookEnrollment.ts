@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { debounce } from 'lodash';
 import { useForm } from 'react-hook-form';
 import { BookFormValues, bookSchema } from '../config/bookEnrollmentConfig';
@@ -37,16 +37,15 @@ const useBookEnrollment = () => {
 		},
 	});
 
-	const debouncedSetSearchQuery = React.useCallback(
-		debounce((value: string) => {
-			setSearchQuery(value);
-		}, 300),
-		[],
-	);
+	const debouncedSetSearchQuery = debounce((value: string) => {
+		setSearchQuery(value);
+	}, 300);
 
 	const handleSearchChange = (query: string) => {
 		debouncedSetSearchQuery(query);
 	};
+
+	const mutationLoading = mutation.isPending;
 
 	const handleOpen = () => {
 		if (searchQuery.trim()) {
@@ -58,6 +57,7 @@ const useBookEnrollment = () => {
 	};
 
 	const onSubmit = (data: BookFormValues) => {
+		console.log(data);
 		mutation.mutate({
 			bookTitle: data.bookTitle,
 			bookIsbn: data.bookIsbn,
@@ -67,7 +67,7 @@ const useBookEnrollment = () => {
 			bookPublisher: data.bookPublisher,
 		});
 
-		// 등록 후 sentence 입력창 초기화
+		// 등록 후 sentence 입력창만 초기화
 		reset({ sentence: '' });
 	};
 
@@ -75,7 +75,10 @@ const useBookEnrollment = () => {
 		setValue('bookTitle', book.title);
 		setValue('bookIsbn', book.isbn);
 		setValue('bookPublisher', book.publisher);
-		setValue('bookAuthor', book.author);
+		setValue(
+			'bookAuthor',
+			book.author?.length > 0 ? book.author : 'Unknown Author',
+		);
 		setOpen(false);
 	};
 
@@ -99,6 +102,7 @@ const useBookEnrollment = () => {
 		searchResults,
 		handleSelectBook,
 		getBookTitle,
+		mutationLoading,
 	};
 };
 

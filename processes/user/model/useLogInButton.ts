@@ -2,14 +2,22 @@
 
 import { useSession, signIn, signOut } from 'next-auth/react';
 
-const useLogInButton = () => {
-	const { data: session } = useSession();
+const useLogInButton = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
+	const { update } = useSession();
+
+	const handleSignOut = async () => {
+		await signOut({
+			redirect: false,
+		});
+		await update();
+
+		window.location.reload();
+	};
 
 	const returnData = {
-		userId: session ? session.userId : null,
-		buttonText: session ? '로그아웃' : '로그인',
-		buttonColor: session ? 'bg-gray-400' : 'bg-green-700',
-		onClick: session ? () => signOut() : () => signIn(),
+		buttonText: isAuthenticated ? '로그아웃' : '로그인',
+		buttonColor: isAuthenticated ? 'bg-gray-400' : 'bg-black',
+		onClick: isAuthenticated ? () => handleSignOut() : () => signIn(),
 	};
 
 	return returnData;

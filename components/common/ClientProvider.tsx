@@ -25,12 +25,12 @@ const ClientProvider = ({
 	);
 
 	return (
-		<QueryClientProvider client={queryClient}>
-			<SessionProvider session={session}>
+		<SessionProvider session={session}>
+			<QueryClientProvider client={queryClient}>
 				<ThemeProvider>{children}</ThemeProvider>
 				<ReactQueryDevtools initialIsOpen={false} />
-			</SessionProvider>
-		</QueryClientProvider>
+			</QueryClientProvider>
+		</SessionProvider>
 	);
 };
 

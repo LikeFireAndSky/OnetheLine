@@ -1,31 +1,27 @@
-import { withAuth } from 'next-auth/middleware';
-import { NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import { NextRequest, NextResponse } from 'next/server';
 
-export const config = {
-	matcher: ['/((?!term|privacy|welcome).*)'], // '/' 포함, '/term', '/privacy' 제외
-};
+export async function middleware(req: NextRequest) {
+	// Define the paths you want to protect
+	const protectedPaths = ['/log', '/line', '/setting']; // Add the paths you want to protect
 
-export default withAuth(
-	function middleware(req) {
-		const isLoggedIn = !!req.nextauth.token;
-		const path = req.nextUrl.pathname;
+	// Check if the request is for a protected path
+	const path = req.nextUrl.pathname;
+	const isProtected = protectedPaths.some(protectedPath =>
+		path.startsWith(protectedPath),
+	);
 
-		if (path === '/term' || path === '/privacy') {
-			return NextResponse.next();
+	if (isProtected) {
+		// Get the token from the request
+		const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+		// If there's no token, redirect to the "/term" page
+		if (!token) {
+			const url = new URL('/', req.nextUrl.origin);
+			return NextResponse.redirect(url);
 		}
+	}
 
-		// 로그인하지 않은 경우에 대한 리다이렉트 조건
-		if (!isLoggedIn) {
-			return NextResponse.redirect(process.env.NEXTAUTH_URL + '/term');
-		}
-
-		return NextResponse.next();
-	},
-
-	{
-		callbacks: {
-			authorized: ({ token }) => !!token, // 토큰이 존재할 경우에만 인증된 사용자로 간주
-		},
-		secret: process.env.NEXTAUTH_SECRET, // 환경 변수 설정
-	},
-);
+	// If the user is authenticated or the path is not protected, continue
+	return NextResponse.next();
+}

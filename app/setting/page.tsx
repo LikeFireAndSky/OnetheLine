@@ -5,6 +5,7 @@ import LogInButton from '@/processes/user/ui/LogInButton';
 import React from 'react';
 import { Card, CardFooter, CardBody } from '@material-tailwind/react';
 import { useInView, animated } from '@react-spring/web';
+import { useSession } from 'next-auth/react';
 
 const Page = () => {
 	const [ref, inView] = useInView(() => ({
@@ -28,7 +29,10 @@ const Page = () => {
 					<CardBody>
 						<h1 className="text-2xl font-semibold">Setting</h1>
 						<p className="text-base">설정</p>
-						<LogInButton />
+						<LogInButton
+							isAuthenticated={true}
+							isLoading={false}
+						/>
 					</CardBody>
 					<CardFooter>
 						<div className="w-full grid grid-rows-2 gap-3">

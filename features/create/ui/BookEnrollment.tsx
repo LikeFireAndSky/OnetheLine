@@ -3,6 +3,7 @@ import {
 	Input,
 	Option,
 	Select,
+	Spinner,
 	Textarea,
 	Typography,
 } from '@material-tailwind/react';
@@ -11,6 +12,7 @@ import { Controller } from 'react-hook-form';
 import useBookEnrollment from '../model/useBookEnrollment';
 import { bookCategoriesKor } from '../config/bookEnrollmentConfig';
 import { BookDialogs } from './BookDialog';
+import { PlusIcon } from '@heroicons/react/16/solid';
 
 const BookEnrollment = () => {
 	const {
@@ -27,6 +29,7 @@ const BookEnrollment = () => {
 		handleOpen,
 		handleSelectBook,
 		getBookTitle,
+		mutationLoading,
 	} = useBookEnrollment();
 
 	return (
@@ -121,8 +124,19 @@ const BookEnrollment = () => {
 				<Button
 					type="submit"
 					className="ml-auto"
+					disabled={mutationLoading}
 				>
-					문장 추가하기
+					{mutationLoading ? (
+						<span className="flex items-center gap-1">
+							등록 중...
+							<Spinner className="h-3" />
+						</span>
+					) : (
+						<span className="flex items-center gap-1">
+							<PlusIcon className="h-4" />
+							등록하기
+						</span>
+					)}
 				</Button>
 			</div>
 		</form>
