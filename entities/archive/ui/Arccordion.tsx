@@ -79,11 +79,11 @@ const AccordionComponent = ({
 							</div>
 						)}
 					</AccordionHeader>
-					<AccordionBody className="flex flex-col">
+					<AccordionBody className="flex flex-col gap-3">
 						{contents.map(content => (
 							<div
 								key={content.SentenceID}
-								className="flex flex-col gap-3 py-3"
+								className="flex flex-col gap-2 py-3"
 							>
 								<div className="text-sm text-black">{content.Content}</div>
 								<div className="w-full flex items-center">

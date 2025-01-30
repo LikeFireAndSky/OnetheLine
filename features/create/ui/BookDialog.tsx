@@ -60,7 +60,9 @@ const BookDialog = ({
 								<p className="font-semibold line-clamp-1 w-full">
 									{book.title}
 								</p>
-								<p className="font-normal text-gray-600">{book.author}</p>
+								<p className="font-normal text-gray-600">
+									{book.author?.length > 0 ? book.author : 'Unknown Author'}
+								</p>
 							</div>
 						</div>
 					))
