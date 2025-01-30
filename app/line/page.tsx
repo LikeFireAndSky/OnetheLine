@@ -5,6 +5,7 @@ import AccordionComponent from '@/entities/archive/ui/Arccordion';
 import { useGetReadingLog } from '@/entities/archive/api/useGetReadingLog';
 import NoDataLinkCard from '@/entities/archive/ui/NoDataLinkCard';
 import { useInView, animated } from '@react-spring/web';
+import { once } from 'events';
 
 export type ReadingLog = {
 	UserId: string;
@@ -31,7 +32,7 @@ const Page = () => {
 		<animated.section
 			ref={ref}
 			style={inView}
-			className="w-full h-full flex flex-col p-3 mt-3 space-y-5"
+			className="w-full h-fit flex flex-col p-3 mt-3 space-y-5"
 		>
 			<div className="w-full flex flex-col space-y-1">
 				<h1 className="text-2xl font-semibold">View the line</h1>

@@ -6,6 +6,8 @@ import MainLog from '@/entities/line/ui/MainLog';
 import { useGetLine } from '@/entities/line/api/useGetLine';
 import LinkButton from '@/entities/line/ui/LinkButton';
 import LinkCard from '../entities/line/ui/LinkCard';
+import { useSession } from 'next-auth/react';
+import LogInButton from '@/processes/user/ui/LogInButton';
 
 const Home = () => {
 	const [ref, inView] = useInView(() => ({
@@ -18,6 +20,7 @@ const Home = () => {
 		},
 	}));
 
+	const { data: session } = useSession();
 	const { data, isLoading, isError } = useGetLine();
 
 	return (
@@ -28,16 +31,22 @@ const Home = () => {
 		>
 			<div className="w-full flex flex-col space-y-1">
 				<h1 className="text-2xl font-semibold">One the Line</h1>
-				<p className="text-base">하루를 바꿀 문장을 기록하세요.</p>
+				<p className="text-base">오늘 하루를 바꿀 문장을 기록하세요.</p>
 			</div>
 			<MainLog
 				data={data}
 				isLoading={isLoading}
 				isError={isError}
 			/>
-			<div className="w-full grid grid-cols-2 gap-3">
-				<LinkButton types="record" />
-				<LinkButton types="view" />
+			<div className={`w-full gap-3`}>
+				{session ? (
+					<div className="w-full grid grid-cols-2 gap-3">
+						<LinkButton types="record" />
+						<LinkButton types="view" />
+					</div>
+				) : (
+					<LogInButton />
+				)}
 			</div>
 			<div className="w-full grid grid-cols-2 gap-3">
 				<LinkCard

@@ -18,8 +18,12 @@ export default async function handler(
 	const session = await getServerSession(req, res, authOptions);
 
 	if (!session || !session.user) {
-		res.status(401).json({ message: 'Unauthorized' });
-		return;
+		return res.status(200).json({
+			message: 'This user is not authenticated',
+			data: null,
+			isEnrolled: false,
+			isAuthenticated: false,
+		});
 	}
 
 	// Extract user ID from session
@@ -27,11 +31,12 @@ export default async function handler(
 
 	// Validate required fields
 	if (!userId) {
-		res.status(400).json({
-			message: 'Missing required fields: userId',
+		return res.status(200).json({
+			message: 'This user is not authenticated',
+			data: null,
 			isEnrolled: false,
+			isAuthenticated: false,
 		});
-		return;
 	}
 
 	// DynamoDB parameters for QueryCommand
@@ -53,6 +58,7 @@ export default async function handler(
 			return res.status(200).json({
 				message: 'No data found for the given userId',
 				isEnrolled: false,
+				isAuthenticated: true,
 				SentenceCounts: 0,
 			});
 		}
@@ -73,6 +79,7 @@ export default async function handler(
 				message: 'No contents found for the given userId',
 				data: null,
 				isEnrolled: false,
+				isAuthenticated: true,
 				SentenceCounts: sentenceCounts,
 			});
 		}
@@ -99,6 +106,7 @@ export default async function handler(
 			data: result,
 			isEnrolled: true,
 			SentenceCounts: sentenceCounts,
+			isAuthenticated: true,
 		});
 	} catch (error) {
 		// Error handling
@@ -107,6 +115,7 @@ export default async function handler(
 			error,
 			isEnrolled: false,
 			SentenceCounts: 0,
+			isAuthenticated: true,
 		});
 	}
 }

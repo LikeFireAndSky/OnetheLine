@@ -8,7 +8,7 @@ const useLogInButton = () => {
 	const returnData = {
 		userId: session ? session.userId : null,
 		buttonText: session ? '로그아웃' : '로그인',
-		buttonColor: session ? 'bg-gray-400' : 'bg-green-700',
+		buttonColor: session ? 'bg-gray-400' : 'bg-black',
 		onClick: session ? () => signOut() : () => signIn(),
 	};
 
