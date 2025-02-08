@@ -28,12 +28,9 @@ const useDeleteLog = () => {
 		onSuccess: () => {
 			// 삭제 후 새로고침
 			refetch();
-			console.log('Reading log is successfully deleted', '성공');
 		},
 
-		onError: error => {
-			console.log('Failed to delete reading log', error);
-		},
+		onError: error => {},
 
 		retry: 1,
 	});

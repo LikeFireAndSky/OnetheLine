@@ -7,7 +7,6 @@ import {
 	DialogHeader,
 	DialogBody,
 	DialogFooter,
-	Typography,
 } from '@material-tailwind/react';
 import { useDeleteAlert } from '../model/useDeleteAlert';
 
