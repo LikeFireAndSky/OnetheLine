@@ -30,7 +30,10 @@ export const bookSchema = z.object({
 	category: z.string().nonempty('카테고리를 선택해주세요.'),
 	bookPublisher: z.string().nonempty('출판사를 입력해주세요.'),
 	bookAuthor: z.string().nonempty('저자를 입력해주세요.'),
-	sentence: z.string().min(2, '최소 2글자 이상 입력해주세요.'),
+	sentence: z
+		.string()
+		.min(2, '최소 2글자 이상 입력해주세요.')
+		.max(500, '최대 500글자까지 입력 가능합니다.'),
 });
 
 export type BookFormValues = z.infer<typeof bookSchema>;

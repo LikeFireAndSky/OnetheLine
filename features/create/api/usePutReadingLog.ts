@@ -29,7 +29,7 @@ export const usePutReadingLog = () => {
 		},
 
 		onError: error => {
-			console.log('Failed to enroll reading log', error);
+			alert('로그 등록에 실패했습니다. 다시 시도해주세요.');
 		},
 
 		retry: 1,

@@ -27,6 +27,9 @@ const useBookEnrollment = () => {
 		reset,
 	} = useForm<BookFormValues>({
 		resolver: zodResolver(bookSchema),
+		resetOptions: {
+			keepValues: true,
+		},
 		defaultValues: {
 			bookTitle: '',
 			bookIsbn: '',
@@ -57,7 +60,6 @@ const useBookEnrollment = () => {
 	};
 
 	const onSubmit = (data: BookFormValues) => {
-		console.log(data);
 		mutation.mutate({
 			bookTitle: data.bookTitle,
 			bookIsbn: data.bookIsbn,
@@ -68,7 +70,16 @@ const useBookEnrollment = () => {
 		});
 
 		// 등록 후 sentence 입력창만 초기화
-		reset({ sentence: '' });
+		reset({
+			sentence: '',
+		});
+
+		// 등록 후 book 정보는 유지
+		setValue('bookTitle', data.bookTitle);
+		setValue('bookIsbn', data.bookIsbn);
+		setValue('bookPublisher', data.bookPublisher);
+		setValue('bookAuthor', data.bookAuthor);
+		setValue('category', data.category);
 	};
 
 	const handleSelectBook = (book: any) => {
