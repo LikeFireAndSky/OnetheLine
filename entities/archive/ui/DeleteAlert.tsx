@@ -35,21 +35,18 @@ const DeleteDialog = ({
 			<Dialog
 				open={open}
 				size="sm"
-				className=" max-w-11/12"
+				className="max-w-11/12"
 				handler={handleOpen}
 			>
 				<DialogHeader>
-					<p className="text-base font-normal">
-						Would you like to delete the sentence?
-					</p>
+					<p className="text-base font-normal">정말로 삭제하시겠습니까?</p>
 				</DialogHeader>
 				<DialogBody
 					divider
 					className="grid place-items-center gap-4"
 				>
 					<p className="font-thin text-xs">
-						Once deleted, the sentence cannot be recovered, and if it is the
-						last sentence of the book, the book will be deleted as well.
+						한번 삭제한 문장은 다시 복구할 수 없습니다.
 					</p>
 				</DialogBody>
 				<DialogFooter className="space-x-2">
@@ -59,13 +56,13 @@ const DeleteDialog = ({
 						className="border border-blue-gray-300"
 						onClick={handleOpen}
 					>
-						Cancle
+						취소
 					</Button>
 					<Button
 						variant="gradient"
 						onClick={handleDelete}
 					>
-						Delete
+						삭제하기
 					</Button>
 				</DialogFooter>
 			</Dialog>
