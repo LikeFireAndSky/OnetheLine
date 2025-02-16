@@ -12,5 +12,7 @@ export const useDeleteAlert = (sentenceId: string, bookIsbn: string) => {
 		handleOpen();
 	};
 
-	return { open, handleOpen, handleDelete };
+	const deleting = mutation.isPending;
+
+	return { open, handleOpen, handleDelete, deleting };
 };
