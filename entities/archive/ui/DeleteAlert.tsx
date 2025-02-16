@@ -19,7 +19,7 @@ const DeleteDialog = ({
 	bookIsbn: string;
 	children: React.ReactNode;
 }) => {
-	const { open, handleOpen, handleDelete } = useDeleteAlert(
+	const { open, handleOpen, handleDelete, deleting } = useDeleteAlert(
 		sentenceId,
 		bookIsbn,
 	);
@@ -61,6 +61,7 @@ const DeleteDialog = ({
 					<Button
 						variant="gradient"
 						onClick={handleDelete}
+						disabled={deleting}
 					>
 						삭제하기
 					</Button>
