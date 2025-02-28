@@ -1,26 +1,30 @@
-import React from 'react';
 import { z } from 'zod';
 
 export const bookCategoriesKor = [
 	{
 		type: 'business-economics',
 		kor: '경제/비즈니스',
+		color: 'bg-[#4E5FBF]',
 	},
 	{
 		type: 'science-technology',
 		kor: '과학/기술',
+		color: 'bg-[#1D3159]',
 	},
 	{
 		type: 'selfHelp-psychology',
 		kor: '자기계발/심리',
+		color: 'bg-[#8DA633]',
 	},
 	{
 		type: 'society-environment',
 		kor: '사회/환경',
+		color: 'bg-[#F2B544]',
 	},
 	{
 		type: 'literature-arts',
 		kor: '문학/예술',
+		color: 'bg-[#D9763D]',
 	},
 ];
 
