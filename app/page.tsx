@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useInView, animated } from '@react-spring/web';
 import MainLog from '@/entities/line/ui/MainLog';
 import { useGetLine } from '@/entities/line/api/useGetLine';
 import LinkButton from '@/entities/line/ui/LinkButton';
 import LinkCard from '../entities/line/ui/LinkCard';
-import { useSession } from 'next-auth/react';
 import LogInButton from '@/processes/user/ui/LogInButton';
 
 const Home = () => {

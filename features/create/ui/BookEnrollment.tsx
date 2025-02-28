@@ -90,8 +90,12 @@ const BookEnrollment = () => {
 									<Option
 										key={category.type}
 										value={category.type}
+										className="w-full flex justify-between"
 									>
-										{category.kor}
+										<div className="w-full flex justify-between items-center gap-2">
+											<p>{category.kor}</p>
+											<p className={`w-3 h-3 rounded-full ${category.color}`} />
+										</div>
 									</Option>
 								))}
 							</Select>
