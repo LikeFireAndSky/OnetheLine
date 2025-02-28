@@ -49,6 +49,7 @@ export default async function handler(
 
 	const sentenceId = randomUUID();
 	const timestamp = Date.now();
+	const lastUpdatedTime = timestamp.toString();
 
 	// DynamoDB UpdateItem 파라미터
 	const updateParams: UpdateItemCommandInput = {
@@ -58,7 +59,7 @@ export default async function handler(
 			BookId: { S: `${bookIsbn}` },
 		},
 		UpdateExpression:
-			'SET Contents = list_append(if_not_exists(Contents, :emptyList), :newContent), Category = :category, BookTitle = :bookTitle, BookAuthor = :bookAuthor, BookPublisher = :bookPublisher',
+			'SET Contents = list_append(if_not_exists(Contents, :emptyList), :newContent), Category = :category, BookTitle = :bookTitle, BookAuthor = :bookAuthor, BookPublisher = :bookPublisher, LastUpdated = :lastUpdatedTime',
 		ExpressionAttributeValues: {
 			':newContent': {
 				L: [
@@ -76,6 +77,7 @@ export default async function handler(
 			':bookTitle': { S: bookTitle },
 			':bookAuthor': { S: bookAuthor },
 			':bookPublisher': { S: bookPublisher },
+			':lastUpdatedTime': { N: lastUpdatedTime },
 		},
 		ReturnValues: 'ALL_NEW', // 올바른 문자열 리터럴 사용
 	};
