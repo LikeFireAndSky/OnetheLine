@@ -6,8 +6,6 @@ import {
 	CardBody,
 } from '@material-tailwind/react';
 import React from 'react';
-import { IconSelection } from './IconSelection';
-import { IconColor } from '../lib/utils';
 import useAccordion from '../model/useAccordion';
 import {
 	CalendarIcon,
@@ -16,6 +14,10 @@ import {
 	XMarkIcon,
 } from '@heroicons/react/16/solid';
 import DeleteDialog from './DeleteAlert';
+import {
+	getCategoryColor,
+	getCategoryKor,
+} from '@/features/create/config/bookEnrollmentConfig';
 
 const AccordionComponent = ({
 	index,
@@ -41,15 +43,18 @@ const AccordionComponent = ({
 				<Accordion open={open === index}>
 					<AccordionHeader className="flex flex-col w-full py-0 justify-start items-center gap-3 border-b-0">
 						<div className="flex w-full flex-col space-y-1">
-							<div className="w-full flex items-center">
-								<span
-									className={`flex flex-col flex-shrink-0 mr-2 items-center justify-center w-6 h-6 bg-${IconColor(
-										category,
-									)} rounded-full`}
-								>
-									{IconSelection(category)}
-								</span>
-								<p className="text-base font-light flex-shrink-0 ml-2">
+							<div className="w-full flex items-center justify-between">
+								<div className="flex items-center">
+									<p
+										className={` w-3 h-3 rounded-full font-normal ${getCategoryColor(
+											category,
+										)}`}
+									/>
+									<p className="text-sm font-light flex-shrink-0 ml-2">
+										{getCategoryKor(category)}
+									</p>
+								</div>
+								<p className="text-sm font-light flex-shrink-0 ml-2">
 									lines : {contentsLength}
 								</p>
 							</div>

@@ -18,22 +18,14 @@ const useAccordion = ({
 
 	// contents에서 2개 이하의 문장을 랜덤으로 선택한 후 그 문장을 배열로 반환, 단 contents가 2개 이하일 경우 contents를 그대로 반환
 	const previewContents = () => {
-		if (contents.length <= 2) return contents;
+		// contents가 비어있다면 빈 배열을 반환
+		if (!contents || contents.length === 0) return [];
 
-		const randomContents = [] as {
-			SentenceID: string;
-			Timestamp: string;
-			Content: string;
-		}[];
+		// contents 길이 내에서 무작위 인덱스 선택
+		const randomIndex = Math.floor(Math.random() * contents.length);
 
-		while (randomContents.length < 2) {
-			const randomIndex = Math.floor(Math.random() * contents.length);
-			if (!randomContents.includes(contents[randomIndex])) {
-				randomContents.push(contents[randomIndex]);
-			}
-		}
-
-		return randomContents;
+		// 선택된 한 개 아이템만 배열 형태로 반환
+		return [contents[randomIndex]];
 	};
 
 	const previewData = previewContents();

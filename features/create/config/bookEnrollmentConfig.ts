@@ -28,6 +28,30 @@ export const bookCategoriesKor = [
 	},
 ];
 
+export const getCategoryColor = (category: string) => {
+	const selectedCategory = bookCategoriesKor.find(
+		categoryItem => categoryItem.type === category,
+	);
+
+	if (!selectedCategory) {
+		return 'bg-gray-300';
+	}
+
+	return selectedCategory?.color;
+};
+
+export const getCategoryKor = (category: string) => {
+	const selectedCategory = bookCategoriesKor.find(
+		categoryItem => categoryItem.type === category,
+	);
+
+	if (!selectedCategory) {
+		return '기타';
+	}
+
+	return selectedCategory?.kor;
+};
+
 export const bookSchema = z.object({
 	bookTitle: z.string().nonempty('책을 검색하여 등록해주세요.'),
 	bookIsbn: z.string().nonempty('ISBN is required.'),
