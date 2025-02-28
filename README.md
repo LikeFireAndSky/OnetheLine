@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# OneTheLine
 
-## Getting Started
+> 오늘 하루를 바꿀 최고의 문장을 기록하세요.
 
-First, run the development server:
+**OneTheLine**은 마음에 드는 문장(책의 구절 등)을 기록해두고, 홈 화면에서 무작위
+로 노출되도록 하여 중요한 문장들이 잊혀지지 않도록 도와주는 **PWA(Progressive
+Web App)**입니다.  
+언제든 **www.onetheline.xyz** 에 접속해, 인상적인 문구를 기록하고 자유롭게 확인
+해보세요!
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 특징
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **PWA 지원**
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   - 스마트폰에 웹앱을 **설치**해 오프라인에서도 사용 가능.
+   - 홈 화면에 앱 아이콘 형태로 추가할 수 있어 **Native App**처럼 이용 가능.
 
-## Learn More
+2. **랜덤 문장 노출**
 
-To learn more about Next.js, take a look at the following resources:
+   - 기록된 문장 중 무작위로 홈 화면에 표시되어, 방치되지 않고 주기적으로 **리마
+     인드**됩니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **간편한 문장 등록**
+   - 독서 중 발견한 좋은 구절을 빠르고 간단하게 등록할 수 있습니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 기술 스택
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Next.js 14 (App Router)**
+- **TypeScript**
+- **AWS**를를 통한 배포 (예시, 실제 배포 환경에 따라 달라질 수 있음)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## 도움을 준 사람들
+
+- Sophia: UI 구조 개선
