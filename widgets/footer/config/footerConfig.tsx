@@ -1,7 +1,6 @@
 import {
 	Cog6ToothIcon,
 	HomeIcon,
-	InboxStackIcon,
 	PlusIcon,
 	QueueListIcon,
 } from '@heroicons/react/16/solid';

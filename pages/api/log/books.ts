@@ -8,60 +8,51 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ) {
-	// Only allow GET requests
+	// Only allow GET requests; 잘못된 메서드인 경우 즉시 반환
 	if (req.method !== 'GET') {
-		res.status(405).json({ message: 'Method not allowed' });
-		return;
+		return res.status(405).json({ message: 'Method not allowed' });
 	}
 
-	// Get user session using NextAuth
+	// NextAuth를 통해 세션을 가져오고, 세션이 없으면 Unauthorized 응답
 	const session = await getServerSession(req, res, authOptions);
 	if (!session || !session.user) {
-		res.status(401).json({ message: 'Unauthorized' });
-		return;
+		return res.status(401).json({ message: 'Unauthorized' });
 	}
 
-	// Extract user ID from session
+	// 세션에서 사용자 ID 추출
 	const userId = session.userId;
 
-	// 1) GSI로 조회 (LastUpdated가 있는 아이템만 내림차순으로)
+	// GSI 쿼리 파라미터 (LastUpdated가 있는 아이템을 내림차순으로 조회)
 	const indexParams = {
 		TableName: 'LOG_ARCHIVE_BY_USER',
 		IndexName: 'GSI-LastUpdated',
 		KeyConditionExpression: 'UserId = :userId',
-		ExpressionAttributeValues: {
-			':userId': userId,
-		},
+		ExpressionAttributeValues: { ':userId': userId },
 		ScanIndexForward: false, // 내림차순
 	};
 
-	// 2) 기본 테이블로 같은 PartitionKey 조회 (모든 아이템: LastUpdated 유무 상관없이)
-	//    - 테이블의 PK가 UserId, SortKey가 BookId라고 가정
+	// 기본 테이블 쿼리 파라미터 (모든 아이템 조회)
 	const tableParams = {
 		TableName: 'LOG_ARCHIVE_BY_USER',
 		KeyConditionExpression: 'UserId = :userId',
-		ExpressionAttributeValues: {
-			':userId': userId,
-		},
+		ExpressionAttributeValues: { ':userId': userId },
 	};
 
 	try {
-		// 1) GSI 쿼리
-		const indexCommand = new QueryCommand(indexParams);
-		const indexResponse = await ddbDocClient.send(indexCommand);
+		// 두 개의 쿼리를 병렬 실행하여 전체 대기 시간을 단축합니다.
+		const [indexResponse, tableResponse] = await Promise.all([
+			ddbDocClient.send(new QueryCommand(indexParams)),
+			ddbDocClient.send(new QueryCommand(tableParams)),
+		]);
+
+		// GSI 쿼리 결과 (LastUpdated가 있는 아이템들)
 		const itemsWithLU = indexResponse.Items || [];
-
-		// 2) 기본 테이블 쿼리
-		const tableCommand = new QueryCommand(tableParams);
-		const tableResponse = await ddbDocClient.send(tableCommand);
+		// 기본 테이블 쿼리 결과 (모든 아이템)
 		const allItems = tableResponse.Items || [];
-
-		// 3) allItems 중 LastUpdated가 "없는" 아이템만 필터링
+		// 기본 테이블 결과 중 LastUpdated가 없는 아이템 필터링
 		const itemsWithoutLU = allItems.filter(item => !item.LastUpdated);
 
-		// 4) 최종 결과:
-		//    - GSI 쿼리 결과(LastUpdated가 있는 아이템들, 이미 최신순)
-		//    - 뒤에 LastUpdated 없는 아이템들
+		// 최종 결과: GSI 결과(이미 최신순) 뒤에 LastUpdated 없는 아이템 추가
 		const finalItems = [...itemsWithLU, ...itemsWithoutLU];
 
 		return res.status(200).json({

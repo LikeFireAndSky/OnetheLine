@@ -1,6 +1,6 @@
 import { Card, CardBody } from '@material-tailwind/react';
 import React from 'react';
-import { linkCardTypes, useLinkCard } from '../model/useLinkCard';
+import { LinkCardTypes, useLinkCard } from '../model/useLinkCard';
 
 const LinkCard = ({
 	types,
@@ -8,7 +8,7 @@ const LinkCard = ({
 	isLoading,
 	isError,
 }: {
-	types: linkCardTypes;
+	types: LinkCardTypes;
 	data: any;
 	isLoading: boolean;
 	isError: boolean;

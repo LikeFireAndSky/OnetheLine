@@ -28,29 +28,26 @@ export const bookCategoriesKor = [
 	},
 ];
 
-export const getCategoryColor = (category: string) => {
-	const selectedCategory = bookCategoriesKor.find(
-		categoryItem => categoryItem.type === category,
-	);
+// bookCategoriesKor 배열을 Map으로 변환하여 O(1) 조회를 가능하게 함
+const bookCategoriesMap = new Map(
+	bookCategoriesKor.map(category => [category.type, category]),
+);
 
-	if (!selectedCategory) {
-		return 'bg-gray-300';
-	}
+/**
+ * 주어진 카테고리 타입에 해당하는 배경색을 반환합니다.
+ * @param category - 카테고리 타입 문자열
+ * @returns 해당 카테고리의 배경색 문자열, 없으면 'bg-gray-300' 반환
+ */
+export const getCategoryColor = (category: string): string =>
+	bookCategoriesMap.get(category)?.color ?? 'bg-gray-300';
 
-	return selectedCategory?.color;
-};
-
-export const getCategoryKor = (category: string) => {
-	const selectedCategory = bookCategoriesKor.find(
-		categoryItem => categoryItem.type === category,
-	);
-
-	if (!selectedCategory) {
-		return '기타';
-	}
-
-	return selectedCategory?.kor;
-};
+/**
+ * 주어진 카테고리 타입에 해당하는 한글 라벨을 반환합니다.
+ * @param category - 카테고리 타입 문자열
+ * @returns 해당 카테고리의 한글 라벨, 없으면 '기타' 반환
+ */
+export const getCategoryKor = (category: string): string =>
+	bookCategoriesMap.get(category)?.kor ?? '기타';
 
 export const bookSchema = z.object({
 	bookTitle: z.string().nonempty('책을 검색하여 등록해주세요.'),
