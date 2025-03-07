@@ -8,16 +8,16 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ) {
-	// Only allow GET requests
+	// GET 요청이 아니면 즉시 반환
 	if (req.method !== 'GET') {
-		res.status(405).json({ message: 'Method not allowed', isEnrolled: false });
-		return;
+		return res
+			.status(405)
+			.json({ message: 'Method not allowed', isEnrolled: false });
 	}
 
-	// Get user session using NextAuth
+	// NextAuth를 통해 세션을 가져오고, 세션 또는 필수 값이 없으면 반환
 	const session = await getServerSession(req, res, authOptions);
-
-	if (!session || !session.user) {
+	if (!session || !session.user || !session.userId) {
 		return res.status(200).json({
 			message: 'This user is not authenticated',
 			data: null,
@@ -25,21 +25,9 @@ export default async function handler(
 			isAuthenticated: false,
 		});
 	}
+	const userId = session.userId;
 
-	// Extract user ID from session
-	const userId = session.userId; // `id`는 세션 사용자 객체에 저장된 ID 키 (필요에 따라 확인)
-
-	// Validate required fields
-	if (!userId) {
-		return res.status(200).json({
-			message: 'This user is not authenticated',
-			data: null,
-			isEnrolled: false,
-			isAuthenticated: false,
-		});
-	}
-
-	// DynamoDB parameters for QueryCommand
+	// DynamoDB Query 파라미터 설정
 	const params = {
 		TableName: 'LOG_ARCHIVE_BY_USER',
 		KeyConditionExpression: 'UserId = :userId',
@@ -49,12 +37,11 @@ export default async function handler(
 	};
 
 	try {
-		// Execute QueryCommand
-		const command = new QueryCommand(params);
-		const response = await ddbDocClient.send(command);
+		// QueryCommand를 인라인으로 생성하여 실행
+		const response = await ddbDocClient.send(new QueryCommand(params));
 
-		// Check if Items exist
-		if (response.Count! < 1 || !response.Items) {
+		// 데이터가 없으면 조기 반환
+		if (!response.Items || response.Count! < 1) {
 			return res.status(200).json({
 				message: 'No data found for the given userId',
 				isEnrolled: false,
@@ -63,18 +50,19 @@ export default async function handler(
 			});
 		}
 
-		// Calculate total SentenceCounts
-		const sentenceCounts = response.Items.reduce((total, item) => {
+		const items = response.Items;
+		// for-of 루프를 사용하여 모든 항목의 Contents 개수를 누적
+		let sentenceCounts = 0;
+		for (const item of items) {
 			const contents = item.Contents || [];
-			return total + contents.length;
-		}, 0);
+			sentenceCounts += contents.length;
+		}
 
-		// Randomly select an item and its content
-		const randomItemIndex = Math.floor(Math.random() * response.Items.length);
-		const item = response.Items[randomItemIndex];
-
-		// Check if Contents exist in the selected item
-		if (!item.Contents || !item) {
+		// Contents가 있는 항목 중 첫 번째를 선택 (무작위 선택)
+		const itemsWithContents = items.filter(
+			item => item.Contents && item.Contents.length > 0,
+		);
+		if (itemsWithContents.length === 0) {
 			return res.status(200).json({
 				message: 'No contents found for the given userId',
 				data: null,
@@ -83,24 +71,26 @@ export default async function handler(
 				SentenceCounts: sentenceCounts,
 			});
 		}
-
-		const randomIndex = Math.floor(Math.random() * item.Contents.length);
-		const randomContent = item.Contents[randomIndex];
+		const randomItem =
+			itemsWithContents[Math.floor(Math.random() * itemsWithContents.length)];
+		const randomContent =
+			randomItem.Contents[
+				Math.floor(Math.random() * randomItem.Contents.length)
+			];
 
 		const result = {
-			UserId: item.UserId,
-			BookId: item.BookId,
-			BookTitle: item.BookTitle,
-			Category: item.Category,
+			UserId: randomItem.UserId,
+			BookId: randomItem.BookId,
+			BookTitle: randomItem.BookTitle,
+			Category: randomItem.Category,
 			Content: randomContent.Content,
 			SentenceID: randomContent.SentenceID,
 			Timestamp: randomContent.Timestamp,
 			totalBooks: response.Count,
-			BookAuthor: item.BookAuthor,
-			BookPublisher: item.BookPublisher,
+			BookAuthor: randomItem.BookAuthor,
+			BookPublisher: randomItem.BookPublisher,
 		};
 
-		// Return successful response with SentenceCounts
 		return res.status(200).json({
 			message: 'Data fetched successfully',
 			data: result,
@@ -109,7 +99,7 @@ export default async function handler(
 			isAuthenticated: true,
 		});
 	} catch (error) {
-		// Error handling
+		console.error('Failed to fetch data:', error);
 		return res.status(500).json({
 			message: 'Failed to fetch data',
 			error,

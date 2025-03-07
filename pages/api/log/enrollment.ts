@@ -12,25 +12,23 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ) {
+	// GET이 아닌 요청은 즉시 거부
 	if (req.method !== 'POST') {
-		res.status(405).json({ message: 'Method not allowed' });
-		return;
+		return res.status(405).json({ message: 'Method not allowed' });
 	}
 
-	// Get user session using NextAuth
+	// NextAuth를 통해 세션을 가져오고, 세션이 없으면 Unauthorized 반환
 	const session = await getServerSession(req, res, authOptions);
-
 	if (!session || !session.user) {
-		res.status(401).json({ message: 'Unauthorized' });
-		return;
+		return res.status(401).json({ message: 'Unauthorized' });
 	}
 
-	// Extract user ID from session
-	const userId = session.userId;
+	// 세션에서 사용자 ID 추출
+	const { userId } = session;
 
+	// 요청 본문에서 필요한 필드 추출 및 유효성 검사
 	const { bookTitle, bookIsbn, category, sentence, bookAuthor, bookPublisher } =
 		req.body;
-
 	if (
 		!userId ||
 		!bookTitle ||
@@ -40,23 +38,23 @@ export default async function handler(
 		!bookAuthor ||
 		!bookPublisher
 	) {
-		res.status(400).json({
+		return res.status(400).json({
 			message:
 				'Missing required fields: userId, bookTitle, category, or sentence',
 		});
-		return;
 	}
 
+	// 고유 문장 ID 생성 및 타임스탬프 설정
 	const sentenceId = randomUUID();
 	const timestamp = Date.now();
 	const lastUpdatedTime = timestamp.toString();
 
-	// DynamoDB UpdateItem 파라미터
+	// DynamoDB UpdateItem 파라미터 설정 (UpdateExpression과 AttributeValues 정의)
 	const updateParams: UpdateItemCommandInput = {
 		TableName: 'LOG_ARCHIVE_BY_USER',
 		Key: {
 			UserId: { S: userId },
-			BookId: { S: `${bookIsbn}` },
+			BookId: { S: bookIsbn },
 		},
 		UpdateExpression:
 			'SET Contents = list_append(if_not_exists(Contents, :emptyList), :newContent), Category = :category, BookTitle = :bookTitle, BookAuthor = :bookAuthor, BookPublisher = :bookPublisher, LastUpdated = :lastUpdatedTime',
@@ -79,20 +77,21 @@ export default async function handler(
 			':bookPublisher': { S: bookPublisher },
 			':lastUpdatedTime': { N: lastUpdatedTime },
 		},
-		ReturnValues: 'ALL_NEW', // 올바른 문자열 리터럴 사용
+		ReturnValues: 'ALL_NEW',
 	};
 
 	try {
-		const updateCommand = new UpdateItemCommand(updateParams);
-		const updateResponse = await ddbDocClient.send(updateCommand);
+		// UpdateItemCommand를 인라인으로 생성하여 DynamoDB에 업데이트 요청을 보냅니다.
+		const updateResponse = await ddbDocClient.send(
+			new UpdateItemCommand(updateParams),
+		);
 
-		res.status(200).json({
+		return res.status(200).json({
 			message: 'Sentence added successfully',
-			data: {
-				updatedData: updateResponse.Attributes,
-			},
+			data: { updatedData: updateResponse.Attributes },
 		});
 	} catch (error) {
-		res.status(500).json({ message: 'Failed to save sentence', error });
+		console.error('Failed to save sentence:', error);
+		return res.status(500).json({ message: 'Failed to save sentence', error });
 	}
 }
