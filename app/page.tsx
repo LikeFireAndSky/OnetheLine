@@ -29,7 +29,7 @@ const Home = () => {
 		>
 			<div className="w-full flex flex-col space-y-1">
 				<h1 className="text-2xl font-semibold">One the Line</h1>
-				<p className="text-base">오늘 하루를 바꿀 문장을 기록하세요.</p>
+				<p className="text-base">하루를 바꾸는 단 한 줄</p>
 			</div>
 			<MainLog
 				data={data}
