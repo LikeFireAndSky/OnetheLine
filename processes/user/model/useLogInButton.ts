@@ -1,9 +1,13 @@
 'use client';
 
 import { useSession, signIn, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const useLogInButton = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
 	const { update } = useSession();
+	const router = useRouter();
+
+	const handleSignIn = () => router.push('user-login');
 
 	const handleSignOut = async () => {
 		await signOut({
@@ -17,7 +21,7 @@ const useLogInButton = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
 	const returnData = {
 		buttonText: isAuthenticated ? '로그아웃' : '로그인',
 		buttonColor: isAuthenticated ? 'bg-gray-400' : 'bg-black',
-		onClick: isAuthenticated ? () => handleSignOut() : () => signIn(),
+		onClick: isAuthenticated ? () => handleSignOut() : () => handleSignIn(),
 	};
 
 	return returnData;

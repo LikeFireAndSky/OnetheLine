@@ -54,7 +54,7 @@ export const useMainLog = ({
 		return createText(
 			data.isEnrolled && !!data.data,
 			data.data?.Content ?? '',
-			'앞으로의 하루를 바꿀 책의 구절을 지금 바로 기록하세요.',
+			'오늘 당신에게 필요한 문장은 무엇인가요? 지금 바로 기록해보세요🙂',
 		);
 	};
 
