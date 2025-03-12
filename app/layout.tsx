@@ -27,6 +27,10 @@ export default async function RootLayout({
 
 	return (
 		<html lang="en">
+			<meta
+				name="google-site-verification"
+				content="rKyVP7qe71HP3--SKVXkk6vGzw80qgZ-Z27rHWNwYlM"
+			/>
 			<body className={inter.className}>
 				<ClientProvider session={server_session}>
 					<div className="flex flex-col items-center w-full max-w-[640px] bg-[#F9FAFB] mx-auto h-[100dvh] overflow-hidden">
