@@ -19,10 +19,10 @@ export default function LoginPage() {
 						className=" w-72 mx-auto border borer-1 rounded-full"
 					/>
 					<div>
-						<h2 className="text-xl font-semibold text-center">
+						<h2 className="text-xl font-semibold text-center text-nowrap">
 							OneTheLine 로그인
 						</h2>
-						<p>『하루를 바꾸는 단 한 줄』</p>
+						<p className="text-nowrap">『하루를 바꾸는 단 한 줄』</p>
 					</div>
 				</div>
 				{/* 아이디(일반) 로그인 버튼 */}
@@ -35,7 +35,7 @@ export default function LoginPage() {
 						alt="구글 로그인"
 						width={24}
 					/>
-					구글 아이디 로그인
+					<span className="text-nowrap">구글 로그인</span>
 				</Button>
 
 				{/* 네이버 로그인 버튼 */}
@@ -48,7 +48,7 @@ export default function LoginPage() {
 						alt="구글 로그인"
 						width={24}
 					/>
-					네이버 아이디 로그인
+					<span className="text-nowrap">네이버 로그인</span>
 				</Button>
 			</CardBody>
 		</Card>
