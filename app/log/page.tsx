@@ -23,7 +23,9 @@ const Page = () => {
 		>
 			<div className="w-full flex flex-col space-y-1">
 				<h1 className="text-2xl font-semibold">Create the Line</h1>
-				<p className="text-base">앞으로의 하루를 바꿀 구절을 기록하세요.</p>
+				<p className="text-base">
+					지금, 당신의 마음을 움직이는 문장을 남겨보세요.
+				</p>
 			</div>
 			<BookEnrollment />
 		</animated.section>
