@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest) {
 	// Define the paths you want to protect
-	const protectedPaths = ['/log', '/line', '/setting']; // Add the paths you want to protect
+	const protectedPaths = ['/log', '/line']; // Add the paths you want to protect
 
 	// Check if the request is for a protected path
 	const path = req.nextUrl.pathname;
