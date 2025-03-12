@@ -7,6 +7,7 @@ import Image from 'next/image';
 import GOOGLE_IMAGE from '@/public/images/btn_google.svg';
 import NAVER_IMAGE from '@/public/images/btn_naver.svg';
 import NEW_LOGO from '@/public/images/NEW_LOGO.png';
+import Link from 'next/link';
 
 export default function LoginPage() {
 	return (
@@ -50,6 +51,11 @@ export default function LoginPage() {
 					/>
 					<span className="text-nowrap">네이버 로그인</span>
 				</Button>
+
+				<div className="flex py-3 items-center justify-around text-nowrap">
+					<Link href={'/term'}>서비스 이용약관</Link>
+					<Link href={'/privacy'}>개인정보 처리방침</Link>
+				</div>
 			</CardBody>
 		</Card>
 	);
