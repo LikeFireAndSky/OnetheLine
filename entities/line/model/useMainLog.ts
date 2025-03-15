@@ -72,7 +72,7 @@ export const useMainLog = ({
 	const getAuthorText = (): string => {
 		if (isLoading) return getLoadingText();
 		if (isError) return getErrorText();
-		if (!data.isAuthenticated) return '로';
+		if (!data.isAuthenticated) return '미상';
 		return createText(
 			data.isEnrolled && !!data.data,
 			data.data?.BookAuthor ?? '',
@@ -83,7 +83,7 @@ export const useMainLog = ({
 	const getPublisherText = (): string => {
 		if (isLoading) return getLoadingText();
 		if (isError) return getErrorText();
-		if (!data.isAuthenticated) return '그인';
+		if (!data.isAuthenticated) return '미상';
 		return createText(
 			data.isEnrolled && !!data.data,
 			data.data?.BookPublisher ?? '',

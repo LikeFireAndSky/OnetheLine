@@ -74,8 +74,8 @@ describe('useMainLog', () => {
 			'로그인 후 앞으로의 하루들을 바꿀 문장들을 기록하세요.',
 		);
 		expect(result.current.timeText).toBe(new Date().toLocaleDateString());
-		expect(result.current.authorText).toBe('로');
-		expect(result.current.publisherText).toBe('그인');
+		expect(result.current.authorText).toBe('미상');
+		expect(result.current.publisherText).toBe('미상');
 		expect(result.current.titleText).toBe('로그인이 필요합니다.');
 	});
 
