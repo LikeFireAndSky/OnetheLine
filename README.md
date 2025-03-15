@@ -10,6 +10,10 @@ Web App)**입니다.
 
 ---
 
+## 개발자
+
+@jongsujin @LikeFireAndSky
+
 ## 특징
 
 1. **PWA 지원**
