@@ -49,7 +49,7 @@ export const useMainLog = ({
 		if (isLoading) return getLoadingText();
 		if (isError) return getErrorText();
 		if (!data.isAuthenticated) {
-			return '로그인 후 앞으로의 하루들을 바꿀 문장들을 기록하세요.';
+			return '매일 한 줄의 감동과 영감으로 특별한 하루를 시작해보세요. 지금 바로 로그인하세요!';
 		}
 		return createText(
 			data.isEnrolled && !!data.data,

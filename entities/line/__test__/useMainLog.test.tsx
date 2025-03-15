@@ -71,7 +71,7 @@ describe('useMainLog', () => {
 		);
 
 		expect(result.current.contentText).toBe(
-			'로그인 후 앞으로의 하루들을 바꿀 문장들을 기록하세요.',
+			'매일 한 줄의 감동과 영감으로 특별한 하루를 시작해보세요. 지금 바로 로그인하세요!',
 		);
 		expect(result.current.timeText).toBe(new Date().toLocaleDateString());
 		expect(result.current.authorText).toBe('미상');
