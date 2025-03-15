@@ -15,7 +15,8 @@ const inter = Gothic_A1({ weight: '300', subsets: ['latin'] });
 
 export const metadata: Metadata = {
 	title: 'OneTheLine',
-	description: '오늘 하루를 바꿀 최고의 문장을 기록하세요.',
+	description:
+		'오늘 하루를 바꿀 최고의 문장을 기록하세요. OneTheLine은 사용자가 하루를 바꿀 한 줄의 문장을 기록하고 공유하는 서비스입니다. Google 로그인을 통해 나만의 문장을 저장하고 관리할 수 있습니다.',
 };
 
 export default async function RootLayout({
