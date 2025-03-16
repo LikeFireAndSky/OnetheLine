@@ -41,6 +41,7 @@ const useBookEnrollment = () => {
 			sentence: '',
 			bookAuthor: '',
 			bookPublisher: '',
+			bookPublishedDate: '',
 		},
 	});
 
@@ -97,6 +98,7 @@ const useBookEnrollment = () => {
 				sentence: data.sentence,
 				bookAuthor: data.bookAuthor,
 				bookPublisher: data.bookPublisher,
+				bookPublishedDate: data.bookPublishedDate,
 			});
 
 			// 등록 후 sentence 입력창만 초기화
@@ -108,6 +110,7 @@ const useBookEnrollment = () => {
 			setValue('bookPublisher', data.bookPublisher);
 			setValue('bookAuthor', data.bookAuthor);
 			setValue('category', data.category);
+			setValue('bookPublishedDate', data.bookPublishedDate);
 		},
 		[mutation, reset, setValue],
 	);
@@ -124,6 +127,7 @@ const useBookEnrollment = () => {
 				'bookAuthor',
 				book.author?.length > 0 ? book.author : 'Unknown Author',
 			);
+			setValue('bookPublishedDate', book.pubdate);
 			setOpen(false);
 		},
 		[setValue],

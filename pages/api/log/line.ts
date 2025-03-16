@@ -89,6 +89,7 @@ export default async function handler(
 			totalBooks: response.Count,
 			BookAuthor: randomItem.BookAuthor,
 			BookPublisher: randomItem.BookPublisher,
+			BookPublishedDate: randomItem.BookPublishedDate,
 		};
 
 		return res.status(200).json({

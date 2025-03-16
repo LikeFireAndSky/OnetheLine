@@ -7,6 +7,7 @@ import { useGetLine } from '@/entities/line/api/useGetLine';
 import LinkButton from '@/entities/line/ui/LinkButton';
 import LinkCard from '../entities/line/ui/LinkCard';
 import LogInButton from '@/processes/user/ui/LogInButton';
+import QuoteCard from '@/features/capture/ui/Capture';
 
 const Home = () => {
 	const [ref, inView] = useInView(() => ({

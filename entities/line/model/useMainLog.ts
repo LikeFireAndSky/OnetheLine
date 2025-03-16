@@ -10,6 +10,7 @@ type LogData = {
 		BookAuthor: string;
 		BookPublisher: string;
 		BookTitle: string;
+		BookPublishedDate: string;
 	};
 };
 
@@ -25,6 +26,7 @@ type LogTexts = {
 	authorText: string;
 	publisherText: string;
 	titleText: string;
+	publishedDateText: string;
 };
 
 // 상태별 텍스트를 반환하는 순수 함수들
@@ -102,11 +104,23 @@ export const useMainLog = ({
 		);
 	};
 
+	const getPublishedDateText = (): string => {
+		if (isLoading) return getLoadingText();
+		if (isError) return getErrorText();
+		if (!data.isAuthenticated) return getCurrentDate();
+		return createText(
+			data.isEnrolled && !!data.data,
+			data.data?.BookPublishedDate ?? '',
+			getCurrentDate(),
+		);
+	};
+
 	return {
 		contentText: getContentText(),
 		timeText: getTimeText(),
 		authorText: getAuthorText(),
 		publisherText: getPublisherText(),
 		titleText: getTitleText(),
+		publishedDateText: getPublishedDateText(),
 	};
 };

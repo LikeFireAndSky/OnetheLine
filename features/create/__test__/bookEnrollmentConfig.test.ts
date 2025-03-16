@@ -40,6 +40,7 @@ describe('Book Enrollment Config', () => {
 			bookPublisher: 'Test Publisher',
 			bookAuthor: 'Test Author',
 			sentence: 'This is a valid sentence.',
+			bookPublishedDate: '2022-01-01',
 		};
 
 		it('should validate valid data successfully', () => {
@@ -58,6 +59,7 @@ describe('Book Enrollment Config', () => {
 				bookPublisher: '',
 				bookAuthor: '',
 				sentence: '',
+				bookPublishedDate: '',
 			};
 			const result = bookSchema.safeParse(invalidData);
 			expect(result.success).toBe(false);
@@ -69,6 +71,7 @@ describe('Book Enrollment Config', () => {
 				expect(errors.bookPublisher).toContain('출판사를 입력해주세요.');
 				expect(errors.bookAuthor).toContain('저자를 입력해주세요.');
 				expect(errors.sentence).toContain('최소 2글자 이상 입력해주세요.');
+				expect(errors.bookPublishedDate).toContain('출판일을 입력해주세요.');
 			}
 		});
 
