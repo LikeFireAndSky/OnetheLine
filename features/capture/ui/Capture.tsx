@@ -23,9 +23,10 @@ const QuoteCardModal = ({
 	bookAuthor,
 	bookTitle,
 }: QuoteCardModalProps) => {
-	const { quoteRef, open, handleOpen, captureScreen } = useQuoteCard({
-		bookTitle,
-	});
+	const { quoteRef, open, handleOpen, captureScreen, extractYear } =
+		useQuoteCard({
+			bookTitle,
+		});
 
 	return (
 		<>
@@ -92,7 +93,7 @@ const QuoteCardModal = ({
 						>
 							{bookTitle}
 							<br />({bookAuthor || '작가 미상'} |{' '}
-							{bookPublishedDate || '출판일 미상'})
+							{extractYear(bookPublishedDate) || '출판일 미상'})
 						</p>
 						{/* 로고 – 원래 크기를 유지하며 왼쪽 5%, 아래쪽 5% 위치 */}
 						<div
