@@ -22,5 +22,8 @@ export const useQuoteCard = ({ bookTitle }: { bookTitle: string }) => {
 		});
 	};
 
-	return { quoteRef, open, handleOpen, captureScreen };
+	// 날짜데이터에서 년도만 추출하는 함수(앞 4자리)
+	const extractYear = (date: string) => date.slice(0, 4);
+
+	return { quoteRef, open, handleOpen, captureScreen, extractYear };
 };
