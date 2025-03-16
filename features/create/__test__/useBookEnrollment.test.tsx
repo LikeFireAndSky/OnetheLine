@@ -26,6 +26,7 @@ jest.mock('../api/useGetBookInfo', () => ({
 						isbn: '123',
 						publisher: 'Test Publisher',
 						author: 'Test Author',
+						pubdate: '19990927',
 					},
 			  ]
 			: [],
@@ -105,6 +106,7 @@ describe('useBookEnrollment hook', () => {
 			sentence: 'A sample sentence',
 			bookAuthor: 'Author Name',
 			bookPublisher: 'Publisher Name',
+			bookPublishedDate: '19990927',
 		};
 		act(() => {
 			result.current.onSubmit(formData);

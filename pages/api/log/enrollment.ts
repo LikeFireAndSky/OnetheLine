@@ -27,8 +27,15 @@ export default async function handler(
 	const { userId } = session;
 
 	// 요청 본문에서 필요한 필드 추출 및 유효성 검사
-	const { bookTitle, bookIsbn, category, sentence, bookAuthor, bookPublisher } =
-		req.body;
+	const {
+		bookTitle,
+		bookIsbn,
+		category,
+		sentence,
+		bookAuthor,
+		bookPublisher,
+		bookPublishedDate,
+	} = req.body;
 	if (
 		!userId ||
 		!bookTitle ||
@@ -36,7 +43,8 @@ export default async function handler(
 		!sentence ||
 		!bookIsbn ||
 		!bookAuthor ||
-		!bookPublisher
+		!bookPublisher ||
+		!bookPublishedDate
 	) {
 		return res.status(400).json({
 			message:
@@ -49,6 +57,8 @@ export default async function handler(
 	const timestamp = Date.now();
 	const lastUpdatedTime = timestamp.toString();
 
+	console.log('sentenceId:', req.body);
+
 	// DynamoDB UpdateItem 파라미터 설정 (UpdateExpression과 AttributeValues 정의)
 	const updateParams: UpdateItemCommandInput = {
 		TableName: 'LOG_ARCHIVE_BY_USER',
@@ -57,7 +67,7 @@ export default async function handler(
 			BookId: { S: bookIsbn },
 		},
 		UpdateExpression:
-			'SET Contents = list_append(if_not_exists(Contents, :emptyList), :newContent), Category = :category, BookTitle = :bookTitle, BookAuthor = :bookAuthor, BookPublisher = :bookPublisher, LastUpdated = :lastUpdatedTime',
+			'SET Contents = list_append(if_not_exists(Contents, :emptyList), :newContent), Category = :category, BookTitle = :bookTitle, BookAuthor = :bookAuthor, BookPublisher = :bookPublisher, LastUpdated = :lastUpdatedTime, BookPublishedDate = :bookPublishedDate',
 		ExpressionAttributeValues: {
 			':newContent': {
 				L: [
@@ -76,6 +86,7 @@ export default async function handler(
 			':bookAuthor': { S: bookAuthor },
 			':bookPublisher': { S: bookPublisher },
 			':lastUpdatedTime': { N: lastUpdatedTime },
+			':bookPublishedDate': { S: bookPublishedDate },
 		},
 		ReturnValues: 'ALL_NEW',
 	};
