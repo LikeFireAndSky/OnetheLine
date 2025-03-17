@@ -28,6 +28,23 @@ const QuoteCardModal = ({
 			bookTitle,
 		});
 
+function removeParentheses(str: string): string {
+  let result = '';
+  let depth = 0;
+
+  for (let char of str) {
+    if (char === '(') {
+      depth++; // 괄호 열리면 depth 증가
+    } else if (char === ')') {
+      if (depth > 0) depth--; // 괄호 닫히면 depth 감소
+    } else if (depth === 0) {
+      result += char; // 괄호 밖일 때만 추가
+    }
+  }
+
+  return result;
+}
+
 	return (
 		<>
 			{/* 모달 열기 버튼 */}
@@ -91,7 +108,7 @@ const QuoteCardModal = ({
 								fontWeight: 600,
 							}}
 						>
-							{bookTitle}
+							{removeParentheses(bookTitle)}
 							<br />({bookAuthor || '작가 미상'} |{' '}
 							{extractYear(bookPublishedDate) || '출판일 미상'})
 						</p>
