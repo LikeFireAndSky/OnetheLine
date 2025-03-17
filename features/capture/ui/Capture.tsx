@@ -23,27 +23,17 @@ const QuoteCardModal = ({
 	bookAuthor,
 	bookTitle,
 }: QuoteCardModalProps) => {
-	const { quoteRef, open, handleOpen, captureScreen, extractYear } =
-		useQuoteCard({
-			bookTitle,
-		});
-
-function removeParentheses(str: string): string {
-  let result = '';
-  let depth = 0;
-
-  for (let char of str) {
-    if (char === '(') {
-      depth++; // 괄호 열리면 depth 증가
-    } else if (char === ')') {
-      if (depth > 0) depth--; // 괄호 닫히면 depth 감소
-    } else if (depth === 0) {
-      result += char; // 괄호 밖일 때만 추가
-    }
-  }
-
-  return result;
-}
+	const {
+		quoteRef,
+		open,
+		handleOpen,
+		captureScreen,
+		extractYear,
+		removeParentheses,
+		removeSpecialCharacters,
+	} = useQuoteCard({
+		bookTitle,
+	});
 
 	return (
 		<>
@@ -109,7 +99,7 @@ function removeParentheses(str: string): string {
 							}}
 						>
 							{removeParentheses(bookTitle)}
-							<br />({bookAuthor || '작가 미상'} |{' '}
+							<br />({removeSpecialCharacters(bookAuthor) || '작가 미상'} |{' '}
 							{extractYear(bookPublishedDate) || '출판일 미상'})
 						</p>
 						{/* 로고 – 원래 크기를 유지하며 왼쪽 5%, 아래쪽 5% 위치 */}

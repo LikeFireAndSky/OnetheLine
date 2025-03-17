@@ -25,5 +25,35 @@ export const useQuoteCard = ({ bookTitle }: { bookTitle: string }) => {
 	// 날짜데이터에서 년도만 추출하는 함수(앞 4자리)
 	const extractYear = (date: string) => date.slice(0, 4);
 
-	return { quoteRef, open, handleOpen, captureScreen, extractYear };
+	// 책 이름 ()제거 함수
+	const removeParentheses = (str: string) => {
+		let result = '';
+		let depth = 0;
+
+		for (let char of str) {
+			if (char === '(') {
+				depth++; // 괄호 열리면 depth 증가
+			} else if (char === ')') {
+				if (depth > 0) depth--; // 괄호 닫히면 depth 감소
+			} else if (depth === 0) {
+				result += char; // 괄호 밖일 때만 추가
+			}
+		}
+
+		return result;
+	};
+
+	// 작가 이름에서 특수문자 제거 함수
+	const removeSpecialCharacters = (str: string) =>
+		str.replace(/[^a-zA-Z0-9가-힣]/g, ' ');
+
+	return {
+		quoteRef,
+		open,
+		handleOpen,
+		captureScreen,
+		extractYear,
+		removeParentheses,
+		removeSpecialCharacters,
+	};
 };
