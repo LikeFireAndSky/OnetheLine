@@ -23,6 +23,34 @@ export default function LoginPage() {
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 
+	// 👉 인앱 브라우저 감지 함수
+	const detectInAppBrowser = (userAgent: string): string | null => {
+		const ua = userAgent.toLowerCase();
+		if (ua.includes('instagram')) return 'Instagram';
+		if (ua.includes('fbav') || ua.includes('fban')) return 'Facebook';
+		if (ua.includes('kakaotalk')) return 'KakaoTalk';
+		if (ua.includes('naver')) return 'Naver';
+		if (ua.includes('line')) return 'Line';
+		if (ua.includes('tiktok')) return 'TikTok';
+		return null;
+	};
+
+	// 👉 구글 로그인 버튼 클릭 핸들러
+	const handleGoogleLogin = () => {
+		const userAgent = navigator.userAgent;
+		const inApp = detectInAppBrowser(userAgent);
+
+		if (inApp) {
+			alert(
+				`${inApp} 앱 내 브라우저에서는 Google 로그인이 원활하지 않을 수 있습니다. 크롬이나 사파리로 열어주세요 🙃`,
+			);
+			return; // 로그인 중단
+		}
+
+		// 일반 브라우저 → 정상 로그인
+		signIn('google', { redirect: true, callbackUrl: '/' });
+	};
+
 	return (
 		<>
 			<Card className="flex w-4/5 mx-auto my-auto px-12 items-center justify-center">
@@ -40,12 +68,11 @@ export default function LoginPage() {
 							<p className="text-sm">『하루를 바꾸는 단 한 줄』</p>
 						</div>
 					</div>
+
 					{/* 구글 로그인 버튼 */}
 					<Button
 						className="w-full flex h-14 font-light items-center gap-3 justify-center bg-white hover:bg-black hover:text-white text-black border border-black py-3 px-4 rounded transition mb-3"
-						onClick={() =>
-							signIn('google', { redirect: true, callbackUrl: '/' })
-						}
+						onClick={handleGoogleLogin}
 					>
 						<Image
 							src={GOOGLE_IMAGE}
@@ -55,7 +82,7 @@ export default function LoginPage() {
 						<span>구글 로그인</span>
 					</Button>
 
-					{/* 네이버 로그인 버튼 */}
+					{/* 네이버 로그인 버튼 → 별도 제한 없음 */}
 					<Button
 						className="w-full flex h-14 font-light items-center gap-3 justify-center bg-white hover:bg-green-600 hover:text-white text-black border border-green-500 py-3 px-4 rounded transition"
 						onClick={() =>
@@ -74,7 +101,6 @@ export default function LoginPage() {
 						<button onClick={handleOpen}>OneTheLine 소개</button>
 						<Link href={'/term'}>서비스 이용약관</Link>
 						<Link href={'/privacy'}>개인정보 처리방침</Link>
-						{/* 앱 소개 모달을 여는 버튼 */}
 					</div>
 				</CardBody>
 			</Card>
@@ -90,8 +116,9 @@ export default function LoginPage() {
 					className=" font-light text-sm"
 				>
 					OneTheLine은 사용자가 하루를 바꿀 한 줄의 문장을 기록하고 공유하는
-					서비스입니다.<strong className=" font-semibold">Google 로그인</strong>{' '}
-					또는 <strong className="font-semibold">Naver 로그인</strong>을 통해
+					서비스입니다.
+					<strong className=" font-semibold"> Google 로그인 </strong> 또는{' '}
+					<strong className="font-semibold">Naver 로그인</strong>을 통해
 					개인화된 경험을 제공하며, 사용자의 문장을 안전하게 저장합니다.
 				</DialogBody>
 				<DialogFooter>
