@@ -42,7 +42,7 @@ export default function LoginPage() {
 
 		if (inApp) {
 			alert(
-				`${inApp} 앱 내 브라우저에서는 Google 로그인이 원활하지 않을 수 있습니다. 크롬이나 사파리로 열어주세요 🙃`,
+				`${inApp} 앱 내 브라우저에서는 안전한 Google 로그인을 위하여 크롬이나 사파리로 열어주세요 🙃`,
 			);
 			return; // 로그인 중단
 		}
