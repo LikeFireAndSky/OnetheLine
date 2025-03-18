@@ -42,7 +42,7 @@ export default function LoginPage() {
 
 		if (inApp) {
 			alert(
-				`${inApp} 앱 내 브라우저에서는 안전한 Google 로그인을 위하여 크롬이나 사파리로 열어주세요 🙃`,
+				`${inApp} 앱 내 브라우저에서는 "안전한 Google 로그인"을 위하여 외부 브라우저로 열어주세요 (우측 상단 점 3개를 눌러봐주세요!! 🙃)`,
 			);
 			return; // 로그인 중단
 		}
