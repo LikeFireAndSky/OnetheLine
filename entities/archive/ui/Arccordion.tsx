@@ -116,19 +116,21 @@ const AccordionComponent = ({
 														{krTime(content.Timestamp)}
 													</p>
 												</div>
-												<QuoteCardModal
-													bookSentence={content.Content}
-													BookTitle={BookTitle}
-													BookAuthor={BookAuthor}
-													BookPublishedDate={BookPublishedDate}
-													BookPublisher={BookPublisher}
-												/>
-												<DeleteDialog
-													BookId={BookId}
-													sentenceId={content.SentenceID}
-												>
-													<XMarkIcon className="w-4 h-4" />
-												</DeleteDialog>
+												<div className="flex items-center gap-3">
+													<QuoteCardModal
+														bookSentence={content.Content}
+														BookTitle={BookTitle}
+														BookAuthor={BookAuthor}
+														BookPublishedDate={BookPublishedDate}
+														BookPublisher={BookPublisher}
+													/>
+													<DeleteDialog
+														BookId={BookId}
+														sentenceId={content.SentenceID}
+													>
+														<XMarkIcon className="w-4 h-4" />
+													</DeleteDialog>
+												</div>
 											</div>
 										</div>
 									)}
