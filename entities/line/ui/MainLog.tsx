@@ -34,10 +34,11 @@ const MainLog = ({
 				<div className="w-full flex justify-between items-center">
 					<Typography color="gray">오늘의 구절</Typography>
 					<QuoteCardModal
-						bookTitle={titleText}
+						BookTitle={titleText}
 						bookSentence={contentText}
-						bookAuthor={authorText}
-						bookPublishedDate={publishedDateText}
+						BookAuthor={authorText}
+						BookPublishedDate={publishedDateText}
+						BookPublisher={publisherText}
 					/>
 				</div>
 				<div className="w-full text-sm flex flex-col gap-3">

@@ -9,19 +9,37 @@ import {
 } from '@material-tailwind/react';
 import { useQuoteCard } from '../model/useCapture';
 import { InboxArrowDownIcon } from '@heroicons/react/16/solid';
+import { ReadingLog } from '@/app/line/page';
 
-type QuoteCardModalProps = {
+/**
+ * QuoteCardModal 컴포넌트
+ *
+ * 이 모달은 책의 구절과 관련 정보를 표시하며,
+ * 사용자가 구절을 이미지로 다운로드할 수 있는 기능을 제공합니다.
+ *
+ * @param {Object} props - 컴포넌트 속성
+ * @param {string} props.bookSentence - 표시할 책의 구절(문장)
+ * @param {string} props.bookPublishedDate - 책이 출판된 날짜 (문자열 형식)
+ * @param {string} props.bookAuthor - 책의 저자 이름
+ * @param {string} props.bookTitle - 책의 제목
+ * @param {string} [props.bookPublisher] - 책의 출판사 (선택 사항)
+ *
+ * @returns {JSX.Element} 구절 모달 다이얼로그 컴포넌트
+ */
+
+type QuoteCardModalProps = Pick<
+	ReadingLog,
+	'BookTitle' | 'BookPublisher' | 'BookAuthor' | 'BookPublishedDate'
+> & {
 	bookSentence: string;
-	bookPublishedDate: string;
-	bookAuthor: string;
-	bookTitle: string;
 };
 
 const QuoteCardModal = ({
 	bookSentence,
-	bookPublishedDate,
-	bookAuthor,
-	bookTitle,
+	BookAuthor,
+	BookTitle,
+	BookPublishedDate,
+	BookPublisher,
 }: QuoteCardModalProps) => {
 	const {
 		quoteRef,
@@ -32,7 +50,7 @@ const QuoteCardModal = ({
 		removeParentheses,
 		removeSpecialCharacters,
 	} = useQuoteCard({
-		bookTitle,
+		BookTitle,
 	});
 
 	return (
@@ -98,9 +116,9 @@ const QuoteCardModal = ({
 								fontWeight: 600,
 							}}
 						>
-							{removeParentheses(bookTitle)}
-							<br />({removeSpecialCharacters(bookAuthor) || '작가 미상'} |{' '}
-							{extractYear(bookPublishedDate) || '출판일 미상'})
+							{removeParentheses(BookTitle)}
+							<br />({removeSpecialCharacters(BookAuthor) || '작가 미상'} |{' '}
+							{extractYear(BookPublishedDate) || '출판일 미상'})
 						</p>
 						{/* 로고 – 원래 크기를 유지하며 왼쪽 5%, 아래쪽 5% 위치 */}
 						<div

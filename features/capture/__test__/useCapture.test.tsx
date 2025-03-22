@@ -17,14 +17,14 @@ describe('useQuoteCard hook', () => {
 
 	it('should initialize with open as false', () => {
 		const { result } = renderHook(() =>
-			useQuoteCard({ bookTitle: 'TestBook' }),
+			useQuoteCard({ BookTitle: 'TestBook' }),
 		);
 		expect(result.current.open).toBe(false);
 	});
 
 	it('handleOpen should toggle the open state', () => {
 		const { result } = renderHook(() =>
-			useQuoteCard({ bookTitle: 'TestBook' }),
+			useQuoteCard({ BookTitle: 'TestBook' }),
 		);
 
 		act(() => {
@@ -40,7 +40,7 @@ describe('useQuoteCard hook', () => {
 
 	it('captureScreen should call html2canvas and saveAs with proper filename when quoteRef is set', async () => {
 		const { result } = renderHook(() =>
-			useQuoteCard({ bookTitle: 'TestBook' }),
+			useQuoteCard({ BookTitle: 'TestBook' }),
 		);
 
 		// dummy DOM 요소 생성 및 할당
@@ -73,7 +73,7 @@ describe('useQuoteCard hook', () => {
 
 	it('captureScreen should not call html2canvas if quoteRef is null', async () => {
 		const { result } = renderHook(() =>
-			useQuoteCard({ bookTitle: 'TestBook' }),
+			useQuoteCard({ BookTitle: 'TestBook' }),
 		);
 
 		await act(async () => {

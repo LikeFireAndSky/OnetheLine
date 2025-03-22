@@ -18,40 +18,49 @@ import {
 	getCategoryColor,
 	getCategoryKor,
 } from '@/features/create/config/bookEnrollmentConfig';
+import QuoteCardModal from '@/features/capture/ui/Capture';
+import { ReadingLog } from '@/app/line/page';
+
+export type Contents = {
+	SentenceID: string;
+	Timestamp: string;
+	Content: string;
+};
+
+type AccordionComponentProps = {
+	bookIndex: number;
+} & ReadingLog;
 
 const AccordionComponent = ({
-	index,
-	bookIsbn,
-	title,
-	category,
-	contents,
-}: {
-	index: number;
-	bookIsbn: string;
-	title: string;
-	category: string;
-	contents: { SentenceID: string; Timestamp: string; Content: string }[];
-}) => {
+	bookIndex,
+	BookId,
+	BookPublishedDate,
+	BookAuthor,
+	BookTitle,
+	Contents,
+	Category,
+	BookPublisher,
+}: AccordionComponentProps) => {
 	const { open, onClick, krTime, previewData, contentsLength } = useAccordion({
-		index,
-		contents,
+		bookIndex,
+		Contents,
 	});
 
 	return (
 		<Card className="rounded-sm">
 			<CardBody>
-				<Accordion open={open === index}>
+				<Accordion open={open === bookIndex}>
 					<AccordionHeader className="flex flex-col w-full py-0 justify-start items-center gap-3 border-b-0">
 						<div className="flex w-full flex-col space-y-1">
 							<div className="w-full flex items-center justify-between">
 								<div className="flex items-center">
 									<p
 										className={` w-3 h-3 rounded-full font-normal ${getCategoryColor(
-											category,
+											Category,
 										)}`}
 									/>
 									<p className="text-sm font-light flex-shrink-0 ml-2">
-										{getCategoryKor(category)}
+										{getCategoryKor(Category)}
 									</p>
 								</div>
 								<p className="text-sm font-light flex-shrink-0 ml-2">
@@ -60,13 +69,13 @@ const AccordionComponent = ({
 							</div>
 							<p
 								className={`flex-shrink text-base font-normal ${
-									open === index ? 'line-clamp-3' : 'line-clamp-1'
+									open === bookIndex ? 'line-clamp-3' : 'line-clamp-1'
 								}`}
 							>
-								{title}
+								{BookTitle}
 							</p>
 						</div>
-						{open !== index && (
+						{open !== bookIndex && (
 							<div className="w-full flex flex-col gap-3">
 								{previewData &&
 									previewData.map(contents => (
@@ -85,31 +94,39 @@ const AccordionComponent = ({
 						)}
 					</AccordionHeader>
 					<AccordionBody className="flex flex-col gap-3">
-						{contents.map(content => (
-							<div
-								key={content.SentenceID}
-								className="flex flex-col gap-2 py-3"
-							>
-								<div className="text-sm text-black">{content.Content}</div>
-								<div className="w-full flex items-center">
+						{Contents &&
+							Contents.map(content => (
+								<div
+									key={content.SentenceID}
+									className="flex flex-col gap-2 py-3"
+								>
+									<div className="text-sm text-black">{content.Content}</div>
 									<div className="w-full flex items-center">
-										<CalendarIcon className="w-4 h-4 mr-1" />
-										<p className="text-sm text-gray-500">
-											{krTime(content.Timestamp)}
-										</p>
+										<div className="w-full flex items-center">
+											<CalendarIcon className="w-4 h-4 mr-1" />
+											<p className="text-sm text-gray-500">
+												{krTime(content.Timestamp)}
+											</p>
+										</div>
+										<QuoteCardModal
+											bookSentence={content.Content}
+											BookTitle={BookTitle}
+											BookAuthor={BookAuthor}
+											BookPublishedDate={BookPublishedDate}
+											BookPublisher={BookPublisher}
+										/>
+										<DeleteDialog
+											BookId={BookId}
+											sentenceId={content.SentenceID}
+										>
+											<XMarkIcon className="w-4 h-4" />
+										</DeleteDialog>
 									</div>
-									<DeleteDialog
-										bookIsbn={bookIsbn}
-										sentenceId={content.SentenceID}
-									>
-										<XMarkIcon className="w-4 h-4" />
-									</DeleteDialog>
 								</div>
-							</div>
-						))}
+							))}
 					</AccordionBody>
 					<div className="flex w-full justify-center items-center">
-						{open === index ? (
+						{open === bookIndex ? (
 							<ChevronDoubleUpIcon
 								onClick={onClick}
 								className="w-6 mx-auto cursor-pointer"
