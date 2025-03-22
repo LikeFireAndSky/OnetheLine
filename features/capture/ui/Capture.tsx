@@ -13,9 +13,10 @@ import {
 	ListItem,
 	ListItemPrefix,
 	CardHeader,
+	IconButton,
 } from '@material-tailwind/react';
 import { useQuoteCard } from '../model/useCapture';
-import { InboxArrowDownIcon } from '@heroicons/react/16/solid';
+import { Cog6ToothIcon, InboxArrowDownIcon } from '@heroicons/react/16/solid';
 import { ReadingLog } from '@/app/line/page';
 
 /**
@@ -59,6 +60,10 @@ const QuoteCardModal = ({
 	} = useQuoteCard({
 		BookTitle,
 	});
+
+	// react Spring을 사용하여 배경 색상 변경
+	const [view, setView] = useState(false);
+
 	// SNS 공유용 체크박스 상태: true이면 출판사 정보 표시
 	const [showPublisher, setShowPublisher] = useState(false);
 	// 배경 색상 상태 (기본값: 크림톤)
@@ -89,11 +94,31 @@ const QuoteCardModal = ({
 				handler={handleOpen}
 				size="sm"
 			>
-				<DialogHeader className="text-lg px-5 flex flex-col items-start">
-					<h1>오늘의 구절</h1>
-					<p className="font-light text-sm">오늘의 구절을 확인해보세요.</p>
+				<DialogHeader className="text-lg px-5 flex flex-col items-start relative">
+					<div className="flex items-center justify-between w-full">
+						<div className="flex flex-col items-start">
+							<h1>오늘의 구절</h1>
+							<p className="font-light text-sm">오늘의 구절을 확인해보세요.</p>
+						</div>
+						<IconButton
+							onClick={() => setView(!view)}
+							className={`p-0 text-sm w-6 h-6 ${
+								view ? 'bg-black' : 'bg-gray-500'
+							} transition-colors duration-300 ease-in-out`}
+						>
+							<Cog6ToothIcon
+								className={`p-0 text-sm w-4 h-4 transform transition-transform duration-500 ${
+									!view ? 'rotate-360' : 'rotate-360'
+								}`}
+							/>
+						</IconButton>
+					</div>
 					{/* 배경 색상 라디오 버튼 그룹 */}
-					<div className="mt-2">
+					<div
+						className={`${
+							view ? 'block opacity-100' : 'hidden opacity-0'
+						} transition-opacity ease-in-out duration-1000`}
+					>
 						<Card className="w-full shadow-md p-0">
 							<p className="text-xs text-gray-600 mt-3 pl-3">배경 색상 선택</p>
 							<List className="flex-row min-w-0 p-2 gap-3">
@@ -143,6 +168,7 @@ const QuoteCardModal = ({
 							textAlign: 'center',
 							fontFamily: "'Gothic A1', 'Noto Sans KR', sans-serif",
 							borderRadius: '0.75rem',
+							transition: 'background-color 0.5s',
 							fontWeight: 400,
 						}}
 					>
@@ -191,7 +217,9 @@ const QuoteCardModal = ({
 				</DialogBody>
 				<DialogFooter className="flex justify-end gap-3 px-[7%]">
 					{/* SNS 공유용 체크박스 */}
-					<div className="flex items-center gap-2">
+					<div
+						className={`flex items-center gap-2 ${view ? 'block' : 'hidden'}`}
+					>
 						<Checkbox
 							crossOrigin="anonymous"
 							type="checkbox"
