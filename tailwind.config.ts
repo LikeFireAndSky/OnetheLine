@@ -12,13 +12,17 @@ const config: Config = withMT({
 		'./widgets/**/*.{js,ts,jsx,tsx,mdx}',
 		'./shared/**/*.{js,ts,jsx,tsx,mdx}',
 		'./node_modules/@material-tailwind/react/components/**/*.{js,ts,jsx,tsx,mdx}',
-		'./node_modules/@material-tailwind/react/theme/comonents/**/*.{js,ts,jsx,tsx,mdx}',
+		'./node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx,mdx}',
 	],
 	theme: {
 		extend: {
 			colors: {
 				main: '#FF9800',
 				sub: '#FF6E2F',
+				coffee: '#FFE59FFF',
+				grayey: '#B8B8B8FF',
+				greeney: '#C6DFD6',
+				pinkey: '#FFDADAFF',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

@@ -24,10 +24,58 @@ const ClientProvider = ({
 			}),
 	);
 
+	const theme = {
+		radio: {
+			defaultProps: {
+				color: 'gray',
+				label: undefined,
+				icon: undefined,
+				ripple: true,
+				className: '',
+				disabled: false,
+				containerProps: undefined,
+				labelProps: undefined,
+				iconProps: undefined,
+			},
+			valid: {
+				colors: ['yellow', 'brown', 'white', 'blue', 'gray'],
+			},
+			styles: {
+				colors: {
+					yellow: {
+						color: 'text-coffee',
+						border: 'checked:border-coffee',
+						before: 'checked:before:bg-coffee',
+					},
+					gray: {
+						color: 'text-grayey',
+						border: 'checked:border-grayey',
+						before: 'checked:before:bg-grayey',
+					},
+					green: {
+						color: 'text-greeney',
+						border: 'checked:border-greeney',
+						before: 'checked:before:bg-greeney',
+					},
+					pink: {
+						color: 'text-pinkey',
+						border: 'checked:border-pinkey',
+						before: 'checked:before:bg-pinkey',
+					},
+					white: {
+						color: 'text-white',
+						border: 'checked:border-bg-gray-400',
+						before: 'checked:before:bg-gray-400',
+					},
+				},
+			},
+		},
+	};
+
 	return (
 		<SessionProvider session={session}>
 			<QueryClientProvider client={queryClient}>
-				<ThemeProvider>{children}</ThemeProvider>
+				<ThemeProvider value={theme}>{children}</ThemeProvider>
 				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
 		</SessionProvider>

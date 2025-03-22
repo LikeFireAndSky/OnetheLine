@@ -100,28 +100,38 @@ const AccordionComponent = ({
 									key={content.SentenceID}
 									className="flex flex-col gap-2 py-3"
 								>
-									<div className="text-sm text-black">{content.Content}</div>
-									<div className="w-full flex items-center">
-										<div className="w-full flex items-center">
-											<CalendarIcon className="w-4 h-4 mr-1" />
-											<p className="text-sm text-gray-500">
-												{krTime(content.Timestamp)}
-											</p>
-										</div>
-										<QuoteCardModal
-											bookSentence={content.Content}
-											BookTitle={BookTitle}
-											BookAuthor={BookAuthor}
-											BookPublishedDate={BookPublishedDate}
-											BookPublisher={BookPublisher}
-										/>
-										<DeleteDialog
-											BookId={BookId}
-											sentenceId={content.SentenceID}
+									{open === bookIndex && (
+										<div
+											className={`w-full flex flex-col gap-1 ${
+												open === bookIndex ? 'opacity-100' : 'opacity-0'
+											} transition-opacity delay-300 duration-300 ease-in-out`}
 										>
-											<XMarkIcon className="w-4 h-4" />
-										</DeleteDialog>
-									</div>
+											<div className="text-sm text-black">
+												{content.Content}
+											</div>
+											<div className="w-full flex items-center">
+												<div className="w-full flex items-center">
+													<CalendarIcon className="w-4 h-4 mr-1" />
+													<p className="text-sm text-gray-500">
+														{krTime(content.Timestamp)}
+													</p>
+												</div>
+												<QuoteCardModal
+													bookSentence={content.Content}
+													BookTitle={BookTitle}
+													BookAuthor={BookAuthor}
+													BookPublishedDate={BookPublishedDate}
+													BookPublisher={BookPublisher}
+												/>
+												<DeleteDialog
+													BookId={BookId}
+													sentenceId={content.SentenceID}
+												>
+													<XMarkIcon className="w-4 h-4" />
+												</DeleteDialog>
+											</div>
+										</div>
+									)}
 								</div>
 							))}
 					</AccordionBody>
