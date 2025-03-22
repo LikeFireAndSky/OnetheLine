@@ -1,11 +1,18 @@
 // src/features/QuoteCard/ui/QuoteCardModal.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	Button,
 	Dialog,
 	DialogHeader,
 	DialogBody,
 	DialogFooter,
+	Checkbox,
+	Radio,
+	Card,
+	List,
+	ListItem,
+	ListItemPrefix,
+	CardHeader,
 } from '@material-tailwind/react';
 import { useQuoteCard } from '../model/useCapture';
 import { InboxArrowDownIcon } from '@heroicons/react/16/solid';
@@ -19,10 +26,10 @@ import { ReadingLog } from '@/app/line/page';
  *
  * @param {Object} props - 컴포넌트 속성
  * @param {string} props.bookSentence - 표시할 책의 구절(문장)
- * @param {string} props.bookPublishedDate - 책이 출판된 날짜 (문자열 형식)
- * @param {string} props.bookAuthor - 책의 저자 이름
- * @param {string} props.bookTitle - 책의 제목
- * @param {string} [props.bookPublisher] - 책의 출판사 (선택 사항)
+ * @param {string} props.BookPublishedDate - 책이 출판된 날짜 (문자열 형식)
+ * @param {string} props.BookAuthor - 책의 저자 이름
+ * @param {string} props.BookTitle - 책의 제목
+ * @param {string} [props.BookPublisher] - 책의 출판사 (선택 사항)
  *
  * @returns {JSX.Element} 구절 모달 다이얼로그 컴포넌트
  */
@@ -52,6 +59,19 @@ const QuoteCardModal = ({
 	} = useQuoteCard({
 		BookTitle,
 	});
+	// SNS 공유용 체크박스 상태: true이면 출판사 정보 표시
+	const [showPublisher, setShowPublisher] = useState(false);
+	// 배경 색상 상태 (기본값: 크림톤)
+	const [bgColor, setBgColor] = useState('#fdf6e3');
+
+	// 미리 정의한 배경 색상 옵션
+	const backgroundColors = [
+		{ label: 'yellow', value: '#fdf6e3' },
+		{ label: 'gray', value: '#E9E9E9' },
+		{ label: 'green', value: '#C6DFD6' },
+		{ label: 'pink', value: '#FFECECFF' },
+		{ label: 'white', value: '#FFFFFF' },
+	];
 
 	return (
 		<>
@@ -69,18 +89,51 @@ const QuoteCardModal = ({
 				handler={handleOpen}
 				size="sm"
 			>
-				<DialogHeader className="text-lg px-[7%] flex flex-col items-start">
+				<DialogHeader className="text-lg px-5 flex flex-col items-start">
 					<h1>오늘의 구절</h1>
 					<p className="font-light text-sm">오늘의 구절을 확인해보세요.</p>
+					{/* 배경 색상 라디오 버튼 그룹 */}
+					<div className="mt-2">
+						<Card className="w-full shadow-md p-0">
+							<p className="text-xs text-gray-600 mt-3 pl-3">배경 색상 선택</p>
+							<List className="flex-row min-w-0 p-2 gap-3">
+								{backgroundColors.map(color => (
+									<ListItem
+										key={color.label}
+										className="p-0 w-fit min-w-0"
+									>
+										<label
+											htmlFor="horizontal-list-react"
+											className="flex cursor-pointer items-center"
+										>
+											<ListItemPrefix className="w-fit mr-0">
+												<Radio
+													crossOrigin="anonymous"
+													type="radio"
+													name="bgColor"
+													color={color.label as any}
+													containerProps={{ className: 'p-1' }}
+													value={color.value}
+													checked={bgColor === color.value}
+													onChange={e => setBgColor(e.target.value)}
+												/>
+											</ListItemPrefix>
+										</label>
+									</ListItem>
+								))}
+							</List>
+						</Card>
+					</div>
 				</DialogHeader>
-				<DialogBody className="flex flex-col items-center">
+				<DialogBody className="flex flex-col items-center my-[-1rem]">
 					<div
+						className="shadow-xl"
 						ref={quoteRef}
 						style={{
 							width: '100%',
 							maxWidth: '500px',
 							aspectRatio: '4/5', // 화면에서는 4:5 비율 유지
-							backgroundColor: '#fdf6e3',
+							backgroundColor: bgColor,
 							padding: '7%',
 							position: 'relative',
 							display: 'flex',
@@ -118,7 +171,8 @@ const QuoteCardModal = ({
 						>
 							{removeParentheses(BookTitle)}
 							<br />({removeSpecialCharacters(BookAuthor) || '작가 미상'} |{' '}
-							{extractYear(BookPublishedDate) || '출판일 미상'})
+							{extractYear(BookPublishedDate) || '출판일 미상'}
+							{showPublisher && BookPublisher ? `, ${BookPublisher}` : ''})
 						</p>
 						{/* 로고 – 원래 크기를 유지하며 왼쪽 5%, 아래쪽 5% 위치 */}
 						<div
@@ -135,20 +189,41 @@ const QuoteCardModal = ({
 						</div>
 					</div>
 				</DialogBody>
-				<DialogFooter className="flex justify-end gap-2 px-[7%]">
-					<Button
-						variant="text"
-						onClick={handleOpen}
-						className="w-fit flex items-center justify-center gap-1 rounded-sm  border border-black"
-					>
-						닫기
-					</Button>
-					<Button
-						onClick={captureScreen}
-						className="w-fit flex items-center justify-center gap-1 rounded-sm"
-					>
-						이미지 다운로드
-					</Button>
+				<DialogFooter className="flex justify-end gap-3 px-[7%]">
+					{/* SNS 공유용 체크박스 */}
+					<div className="flex items-center gap-2">
+						<Checkbox
+							crossOrigin="anonymous"
+							type="checkbox"
+							id="showPublisher"
+							size={16}
+							className="text-primary-500 checked:bg-gray-500 border-gray-500 checked:border-gray-500"
+							containerProps={{ className: 'p-1' }}
+							checked={showPublisher}
+							onChange={e => setShowPublisher(e.target.checked)}
+						/>
+						<label
+							htmlFor="showPublisher"
+							className="text-xs text-gray-600"
+						>
+							출판사 표시(SNS 공유용)
+						</label>
+					</div>
+					<div className="w-full flex justify-end gap-2 ">
+						<Button
+							variant="text"
+							onClick={handleOpen}
+							className="w-fit flex items-center justify-center gap-1 rounded-sm border border-black"
+						>
+							닫기
+						</Button>
+						<Button
+							onClick={() => captureScreen(bgColor)}
+							className="w-fit flex items-center justify-center gap-1 rounded-sm"
+						>
+							이미지 다운로드
+						</Button>
+					</div>
 				</DialogFooter>
 			</Dialog>
 		</>

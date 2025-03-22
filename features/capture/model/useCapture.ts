@@ -12,9 +12,12 @@ export const useQuoteCard = ({ BookTitle }: { BookTitle: string }) => {
 	const handleOpen = () => setOpen(prev => !prev);
 
 	// 현재 보이는 quoteRef 영역을 캡쳐해서 이미지로 저장하는 함수
-	const captureScreen = async () => {
+	const captureScreen = async (bgColor: string) => {
 		if (!quoteRef.current) return;
-		const canvas = await html2canvas(quoteRef.current, { useCORS: true });
+		const canvas = await html2canvas(quoteRef.current, {
+			useCORS: true,
+			backgroundColor: bgColor,
+		});
 		canvas.toBlob(blob => {
 			if (blob) {
 				saveAs(blob, `${BookTitle}-screenshot.png`);
