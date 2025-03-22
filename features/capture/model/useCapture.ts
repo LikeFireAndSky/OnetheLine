@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 
-export const useQuoteCard = ({ bookTitle }: { bookTitle: string }) => {
+export const useQuoteCard = ({ BookTitle }: { BookTitle: string }) => {
 	const quoteRef = useRef<HTMLDivElement | null>(null);
 	const [open, setOpen] = useState(false);
 
@@ -17,7 +17,7 @@ export const useQuoteCard = ({ bookTitle }: { bookTitle: string }) => {
 		const canvas = await html2canvas(quoteRef.current, { useCORS: true });
 		canvas.toBlob(blob => {
 			if (blob) {
-				saveAs(blob, `${bookTitle}-screenshot.png`);
+				saveAs(blob, `${BookTitle}-screenshot.png`);
 			}
 		});
 	};

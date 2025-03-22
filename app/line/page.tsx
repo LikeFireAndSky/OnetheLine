@@ -5,14 +5,23 @@ import AccordionComponent from '@/entities/archive/ui/Arccordion';
 import { useGetReadingLog } from '@/entities/archive/api/useGetReadingLog';
 import NoDataLinkCard from '@/entities/archive/ui/NoDataLinkCard';
 import { useInView, animated } from '@react-spring/web';
-import { once } from 'events';
+
+export type Contents = {
+	SentenceID: string;
+	Timestamp: string;
+	Content: string;
+};
 
 export type ReadingLog = {
 	UserId: string;
 	BookId: string;
 	BookTitle: string;
+	LastUpdated: string;
 	Category: string;
-	Contents: { SentenceID: string; Timestamp: string; Content: string }[];
+	BookAuthor: string;
+	BookPublishedDate: string;
+	BookPublisher: string;
+	Contents: Contents[];
 };
 
 const Page = () => {
@@ -46,11 +55,16 @@ const Page = () => {
 				data?.data.map((log: ReadingLog, index: number) => (
 					<AccordionComponent
 						key={log.BookId + log.Category}
-						index={index}
-						bookIsbn={log.BookId}
-						title={log.BookTitle}
-						category={log.Category}
-						contents={log.Contents}
+						UserId={log.UserId}
+						BookAuthor={log.BookAuthor}
+						LastUpdated={log.LastUpdated}
+						bookIndex={index}
+						BookId={log.BookId}
+						BookTitle={log.BookTitle}
+						Category={log.Category}
+						Contents={log.Contents}
+						BookPublisher={log.BookPublisher}
+						BookPublishedDate={log.BookPublishedDate}
 					/>
 				))}
 		</animated.section>

@@ -12,16 +12,16 @@ import { useDeleteAlert } from '../model/useDeleteAlert';
 
 const DeleteDialog = ({
 	sentenceId,
-	bookIsbn,
+	BookId,
 	children,
 }: {
 	sentenceId: string;
-	bookIsbn: string;
+	BookId: string;
 	children: React.ReactNode;
 }) => {
 	const { open, handleOpen, handleDelete, deleting } = useDeleteAlert(
 		sentenceId,
-		bookIsbn,
+		BookId,
 	);
 
 	return (
