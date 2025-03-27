@@ -20,6 +20,7 @@ import {
 } from '@/features/create/config/bookEnrollmentConfig';
 import QuoteCardModal from '@/features/capture/ui/Capture';
 import { ReadingLog } from '@/app/line/page';
+import { removeParentheses } from '@/shared/lib/utils';
 
 export type Contents = {
 	SentenceID: string;
@@ -46,8 +47,25 @@ const AccordionComponent = ({
 		Contents,
 	});
 
+	const bgUi = (category: string) => {
+		switch (category) {
+			case 'business-economics':
+				return 'bg-gradient-business';
+			case 'science-technology':
+				return 'bg-gradient-science';
+			case 'selfHelp-psychology':
+				return 'bg-gradient-selfhelp';
+			case 'society-environment':
+				return 'bg-gradient-society';
+			case 'literature-arts':
+				return 'bg-gradient-literature';
+			default:
+				return 'bg-gradient';
+		}
+	};
+
 	return (
-		<Card className="rounded-sm">
+		<Card className={`rounded-md py-6 ${bgUi(Category)}`}>
 			<CardBody>
 				<Accordion open={open === bookIndex}>
 					<AccordionHeader className="flex flex-col w-full py-0 justify-start items-center gap-3 border-b-0">
@@ -63,16 +81,16 @@ const AccordionComponent = ({
 										{getCategoryKor(Category)}
 									</p>
 								</div>
-								<p className="text-sm font-light flex-shrink-0 ml-2">
-									lines : {contentsLength}
-								</p>
+								<span className="text-xs text-gray-500">
+									Lines: {contentsLength}
+								</span>
 							</div>
 							<p
 								className={`flex-shrink text-base font-normal ${
 									open === bookIndex ? 'line-clamp-3' : 'line-clamp-1'
 								}`}
 							>
-								{BookTitle}
+								{removeParentheses(BookTitle)}
 							</p>
 						</div>
 						{open !== bookIndex && (
