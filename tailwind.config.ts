@@ -37,15 +37,15 @@ const config: Config = withMT({
 			backgroundImage: {
 				// 흰색에서 시작해 80% 지점까지 흰색, 이후 해당 카테고리 색상으로 전환
 				'gradient-business':
-					'linear-gradient(137deg, #ffffff 61.8%, #4E5FBF 176.4%)',
+					'linear-gradient(137deg, #ffffff 76.4%, #4E5FBF 185.4%)',
 				'gradient-science':
-					'linear-gradient(137deg, #ffffff 61.8%, #1D3159 176.4%)',
+					'linear-gradient(137deg, #ffffff 76.4%, #1D3159 185.4%)',
 				'gradient-selfhelp':
-					'linear-gradient(137deg, #ffffff 61.8%, #8DA633 176.4%)',
+					'linear-gradient(137deg, #ffffff 76.4%, #8DA633 185.4%)',
 				'gradient-society':
-					'linear-gradient(137deg, #ffffff 61.8%, #F2B544 176.4%)',
+					'linear-gradient(137deg, #ffffff 76.4%, #F2B544 185.4%)',
 				'gradient-literature':
-					'linear-gradient(137deg, #ffffff 61.8%, #D9763D 176.4%)',
+					'linear-gradient(137deg, #ffffff 76.4%, #D9763D 185.4%)',
 			},
 
 			spacing: {
