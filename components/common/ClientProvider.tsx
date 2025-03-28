@@ -5,6 +5,7 @@ import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from '@material-tailwind/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { BookDataProvider } from '@/shared/share/BookDataContext';
 
 const ClientProvider = ({
 	children,
@@ -75,7 +76,9 @@ const ClientProvider = ({
 	return (
 		<SessionProvider session={session}>
 			<QueryClientProvider client={queryClient}>
-				<ThemeProvider value={theme}>{children}</ThemeProvider>
+				<ThemeProvider value={theme}>
+					<BookDataProvider>{children}</BookDataProvider>
+				</ThemeProvider>
 				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
 		</SessionProvider>

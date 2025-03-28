@@ -3,6 +3,7 @@
 import BookEnrollment from '@/features/create/ui/BookEnrollment';
 import { useInView, animated } from '@react-spring/web';
 import React from 'react';
+import { useBookData } from '@/shared/share/BookDataContext';
 
 const Page = () => {
 	const [ref, inView] = useInView(() => ({
@@ -14,6 +15,8 @@ const Page = () => {
 			tension: 120,
 		},
 	}));
+
+	const { bookData } = useBookData();
 
 	return (
 		<animated.section
@@ -27,7 +30,7 @@ const Page = () => {
 					지금, 당신의 마음을 움직이는 문장을 남겨보세요.
 				</p>
 			</div>
-			<BookEnrollment />
+			<BookEnrollment bookData={bookData} />
 		</animated.section>
 	);
 };

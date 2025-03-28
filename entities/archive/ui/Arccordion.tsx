@@ -21,6 +21,8 @@ import {
 import QuoteCardModal from '@/features/capture/ui/Capture';
 import { ReadingLog } from '@/app/line/page';
 import { removeParentheses } from '@/shared/lib/utils';
+import { useBookData } from '@/shared/share/BookDataContext';
+import { useRouter } from 'next/navigation';
 
 export type Contents = {
 	SentenceID: string;
@@ -46,6 +48,8 @@ const AccordionComponent = ({
 		bookIndex,
 		Contents,
 	});
+	const { setBookData } = useBookData();
+	const router = useRouter();
 
 	const bgUi = (category: string) => {
 		switch (category) {
@@ -62,6 +66,19 @@ const AccordionComponent = ({
 			default:
 				return 'bg-gradient';
 		}
+	};
+
+	const handleClick = () => {
+		setBookData({
+			BookId,
+			BookAuthor,
+			BookTitle,
+			BookPublishedDate,
+			Contents,
+			Category,
+			BookPublisher,
+		});
+		router.push('/log');
 	};
 
 	return (
@@ -84,6 +101,9 @@ const AccordionComponent = ({
 								<span className="text-xs text-gray-500">
 									Lines: {contentsLength}
 								</span>
+								<a onClick={handleClick}>
+									<p className="text-xs text-gray-500">Edit</p>
+								</a>
 							</div>
 							<p
 								className={`flex-shrink text-base font-normal ${
