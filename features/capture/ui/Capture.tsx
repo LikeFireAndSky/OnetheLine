@@ -1,4 +1,5 @@
-// src/features/QuoteCard/ui/QuoteCardModal.tsx
+'use client';
+
 import React, { useState } from 'react';
 import {
 	Button,
@@ -12,28 +13,11 @@ import {
 	List,
 	ListItem,
 	ListItemPrefix,
-	CardHeader,
 	IconButton,
 } from '@material-tailwind/react';
-import { useQuoteCard } from '../model/useCapture';
 import { Cog6ToothIcon, InboxArrowDownIcon } from '@heroicons/react/16/solid';
 import { ReadingLog } from '@/app/line/page';
-
-/**
- * QuoteCardModal 컴포넌트
- *
- * 이 모달은 책의 구절과 관련 정보를 표시하며,
- * 사용자가 구절을 이미지로 다운로드할 수 있는 기능을 제공합니다.
- *
- * @param {Object} props - 컴포넌트 속성
- * @param {string} props.bookSentence - 표시할 책의 구절(문장)
- * @param {string} props.BookPublishedDate - 책이 출판된 날짜 (문자열 형식)
- * @param {string} props.BookAuthor - 책의 저자 이름
- * @param {string} props.BookTitle - 책의 제목
- * @param {string} [props.BookPublisher] - 책의 출판사 (선택 사항)
- *
- * @returns {JSX.Element} 구절 모달 다이얼로그 컴포넌트
- */
+import { useQuoteCard } from '../model/useCapture';
 
 type QuoteCardModalProps = Pick<
 	ReadingLog,
@@ -49,6 +33,7 @@ const QuoteCardModal = ({
 	BookPublishedDate,
 	BookPublisher,
 }: QuoteCardModalProps) => {
+	// 비즈니스 로직은 모델 훅에서 처리
 	const {
 		quoteRef,
 		open,
@@ -57,19 +42,14 @@ const QuoteCardModal = ({
 		extractYear,
 		removeParentheses,
 		removeSpecialCharacters,
-	} = useQuoteCard({
-		BookTitle,
-	});
+	} = useQuoteCard({ BookTitle });
 
-	// react Spring을 사용하여 배경 색상 변경
+	// UI 상태 (화면 전환, 체크박스, 배경색 등)
 	const [view, setView] = useState(false);
-
-	// SNS 공유용 체크박스 상태: true이면 출판사 정보 표시
 	const [showPublisher, setShowPublisher] = useState(false);
-	// 배경 색상 상태 (기본값: 크림톤)
 	const [bgColor, setBgColor] = useState('#fdf6e3');
 
-	// 미리 정의한 배경 색상 옵션
+	// 배경 색상 옵션 (UI 전용)
 	const backgroundColors = [
 		{ label: 'yellow', value: '#fdf6e3' },
 		{ label: 'gray', value: '#E9E9E9' },
@@ -113,7 +93,7 @@ const QuoteCardModal = ({
 							/>
 						</IconButton>
 					</div>
-					{/* 배경 색상 라디오 버튼 그룹 */}
+					{/* 배경 색상 라디오 버튼 그룹 (UI 전용) */}
 					<div
 						className={`${
 							view ? 'block opacity-100' : 'hidden opacity-0'
@@ -157,7 +137,7 @@ const QuoteCardModal = ({
 						style={{
 							width: '100%',
 							maxWidth: '500px',
-							aspectRatio: '4/5', // 화면에서는 4:5 비율 유지
+							aspectRatio: '4/5',
 							backgroundColor: bgColor,
 							padding: '7%',
 							position: 'relative',
@@ -172,10 +152,10 @@ const QuoteCardModal = ({
 							fontWeight: 400,
 						}}
 					>
-						{/* 구절 */}
+						{/* 구절 텍스트 */}
 						<p
 							style={{
-								fontSize: '1.8vh', // 화면 기준, 필요 시 clamp()나 다른 단위로 조정 가능
+								fontSize: '1.8vh',
 								lineHeight: 1.4,
 								whiteSpace: 'pre-wrap',
 								margin: 0,
@@ -200,7 +180,7 @@ const QuoteCardModal = ({
 							{extractYear(BookPublishedDate) || '출판일 미상'}
 							{showPublisher && BookPublisher ? `, ${BookPublisher}` : ''})
 						</p>
-						{/* 로고 – 원래 크기를 유지하며 왼쪽 5%, 아래쪽 5% 위치 */}
+						{/* 로고 */}
 						<div
 							style={{
 								position: 'absolute',

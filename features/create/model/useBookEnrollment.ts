@@ -5,8 +5,9 @@ import { useForm } from 'react-hook-form';
 import { BookFormValues, bookSchema } from '../config/bookEnrollmentConfig';
 import { usePutReadingLog } from '../api/usePutReadingLog';
 import { useGetBookInfo } from '../api/useGetBookInfo';
+import { BookData, useBookData } from '@/shared/share/BookDataContext';
 
-const useBookEnrollment = () => {
+const useBookEnrollment = (bookData?: BookData) => {
 	// 삭제 API 및 검색 API 관련 훅
 	const mutation = usePutReadingLog();
 
@@ -35,13 +36,13 @@ const useBookEnrollment = () => {
 		resolver: zodResolver(bookSchema),
 		resetOptions: { keepValues: true },
 		defaultValues: {
-			bookTitle: '',
-			bookIsbn: '',
-			category: '',
+			bookTitle: bookData?.BookTitle || '',
+			bookIsbn: bookData?.BookId || '',
+			category: bookData?.Category || '',
 			sentence: '',
-			bookAuthor: '',
-			bookPublisher: '',
-			bookPublishedDate: '',
+			bookAuthor: bookData?.BookAuthor || '',
+			bookPublisher: bookData?.BookPublisher || '',
+			bookPublishedDate: bookData?.BookPublishedDate || '',
 		},
 	});
 

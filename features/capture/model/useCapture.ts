@@ -26,7 +26,8 @@ export const useQuoteCard = ({ BookTitle }: { BookTitle: string }) => {
 	};
 
 	// 날짜데이터에서 년도만 추출하는 함수(앞 4자리)
-	const extractYear = (date: string) => date.slice(0, 4);
+	const extractYear = (date: string) =>
+		date ? date.slice(0, 4) : new Date().getFullYear().toString();
 
 	// 책 이름 ()제거 함수
 	const removeParentheses = (str: string) => {

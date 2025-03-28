@@ -12,6 +12,11 @@ export const useGetReadingLog = () => {
 		queryFn: getReadingLog,
 
 		retry: 3,
+
+		refetchOnReconnect: true,
+		refetchOnWindowFocus: false,
+		refetchInterval: 1000 * 60 * 5, // 5분
+		refetchIntervalInBackground: false,
 	});
 	return query;
 };

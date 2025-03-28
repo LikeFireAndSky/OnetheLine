@@ -11,8 +11,9 @@ import useBookEnrollment from '../model/useBookEnrollment';
 import { bookCategoriesKor } from '../config/bookEnrollmentConfig';
 import { BookDialogs } from './BookDialog';
 import { PlusIcon } from '@heroicons/react/16/solid';
+import { BookData } from '@/shared/share/BookDataContext';
 
-const BookEnrollment = () => {
+const BookEnrollment = ({ bookData }: { bookData?: BookData }) => {
 	const {
 		handleSubmit,
 		control,
@@ -28,7 +29,7 @@ const BookEnrollment = () => {
 		handleSelectBook,
 		getBookTitle,
 		mutationLoading,
-	} = useBookEnrollment();
+	} = useBookEnrollment(bookData);
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
