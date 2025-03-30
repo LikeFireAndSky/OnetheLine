@@ -1,3 +1,4 @@
+// 기존 import 유지
 import { ddbDocClient } from '@/processes/user/lib/ddbDocClient';
 import {
 	UpdateItemCommand,
@@ -12,19 +13,15 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ) {
-	// ✅ 허용된 메서드 검사
 	if (req.method !== 'DELETE') {
 		return res.status(405).json({ message: 'Method not allowed' });
 	}
 
-	// ✅ 인증된 사용자 정보 가져오기
 	const session = await getServerSession(req, res, authOptions);
 	if (!session || !session.user || !session.userId) {
 		return res.status(401).json({ message: 'Unauthorized' });
 	}
 	const userId = session.userId;
-
-	// ✅ 쿼리 파라미터 확인
 	const { bookIsbn, sentenceId } = req.query;
 	if (!userId || !bookIsbn || !sentenceId) {
 		return res
@@ -33,7 +30,6 @@ export default async function handler(
 	}
 
 	try {
-		// 📦 해당 책에서 문장 데이터를 가져옴
 		const { Item } = await ddbDocClient.send(
 			new GetItemCommand({
 				TableName: 'LOG_ARCHIVE_BY_USER',
@@ -50,7 +46,6 @@ export default async function handler(
 		const category = Item.Category?.S;
 		const contents = Item.Contents?.L || [];
 
-		// 🎯 삭제 대상 문장을 찾기
 		const target = contents.find((c: any) => c.M?.SentenceID?.S === sentenceId);
 		if (!target || !target.M?.Timestamp?.N) {
 			return res
@@ -58,39 +53,42 @@ export default async function handler(
 				.json({ message: 'Sentence not found or invalid format' });
 		}
 
-		// 🕒 타임스탬프 기반 시간 정보 계산
 		const timestamp = Number(target.M.Timestamp.N);
 		const date = new Date(timestamp);
-		const yyyyMMdd = date.toISOString().slice(0, 10); // 예: 2025-03-30
-		const hour = String(date.getHours()).padStart(2, '0'); // 예: 02
-		const weekday = String(date.getDay()); // 일(0) ~ 토(6)
+		const yyyyMMdd = date.toISOString().slice(0, 10);
+		const hour = String(date.getHours()).padStart(2, '0');
+		const weekday = String(date.getDay());
 
-		// 📊 영향을 받는 통계 항목 구성
+		// 📊 누적 감소할 통계 항목
 		const stats = [
 			{ SK: `CATEGORY#${category}` },
-			{ SK: `DATE#${yyyyMMdd}` },
 			{
 				SK: `BOOK#${bookIsbn}`,
 				extra: bookTitle ? { BookTitle: { S: bookTitle } } : undefined,
 			},
 			{ SK: `HOUR#${hour}` },
 			{ SK: `WEEKDAY#${weekday}` },
+			// ✅ 날짜별은 Count와 Cumulative 둘 다 관리
+			{ SK: `DATE#${yyyyMMdd}`, cumulative: true },
 		];
 
-		// 📉 통계 감소 처리 (Count -1) + 필요 시 항목 삭제
+		// 📉 통계 감소 및 삭제 처리
 		for (const stat of stats) {
 			try {
-				// 🧾 기본 감소 파라미터 구성
-				const attributeValues: Record<string, any> = {
-					':decr': { N: '-1' },
-				};
+				const updateExpr = ['ADD #count :decr'];
+				const exprNames = { '#count': 'Count' };
+				const exprValues: Record<string, any> = { ':decr': { N: '-1' } };
 
-				// 책 제목이 있는 경우, BookTitle도 같이 갱신 (필수는 아님)
 				if (stat.extra?.BookTitle?.S) {
-					attributeValues[':title'] = { S: stat.extra.BookTitle.S };
+					updateExpr.push('SET BookTitle = :title');
+					exprValues[':title'] = { S: stat.extra.BookTitle.S };
 				}
 
-				// 1️⃣ Count -1 실행
+				if (stat.cumulative) {
+					updateExpr.push('ADD Cumulative :decr'); // 누적도 감소
+				}
+
+				// 📤 Update 실행
 				await ddbDocClient.send(
 					new UpdateItemCommand({
 						TableName: 'ONETHELINE_USER_STAT_SUMMARY',
@@ -98,16 +96,14 @@ export default async function handler(
 							UserId: { S: userId },
 							Statistic: { S: stat.SK },
 						},
-						UpdateExpression: stat.extra
-							? 'ADD #count :decr SET BookTitle = :title'
-							: 'ADD #count :decr',
-						ExpressionAttributeNames: { '#count': 'Count' },
-						ExpressionAttributeValues: attributeValues,
+						UpdateExpression: updateExpr.join(' '),
+						ExpressionAttributeNames: exprNames,
+						ExpressionAttributeValues: exprValues,
 					}),
 				);
 
-				// 2️⃣ 감소 후 Count 값 확인
-				const getStat = await ddbDocClient.send(
+				// 📦 현재 값 확인
+				const { Item: updatedStat } = await ddbDocClient.send(
 					new GetItemCommand({
 						TableName: 'ONETHELINE_USER_STAT_SUMMARY',
 						Key: {
@@ -116,10 +112,14 @@ export default async function handler(
 						},
 					}),
 				);
-				const currentCount = Number(getStat.Item?.Count?.N ?? '1');
 
-				// 3️⃣ Count가 0이면 해당 항목 삭제
-				if (currentCount <= 0) {
+				const currentCount = Number(updatedStat?.Count?.N ?? '1');
+				const currentCumulative = Number(updatedStat?.Cumulative?.N ?? '1');
+
+				const shouldDelete =
+					currentCount <= 0 && (!stat.cumulative || currentCumulative <= 0);
+
+				if (shouldDelete) {
 					await ddbDocClient.send(
 						new DeleteItemCommand({
 							TableName: 'ONETHELINE_USER_STAT_SUMMARY',
@@ -135,13 +135,12 @@ export default async function handler(
 			}
 		}
 
-		// 🧼 Contents 배열에서 문장 삭제
+		// 📚 문장 삭제
 		const updatedContents = contents.filter(
 			(c: any) => c.M?.SentenceID?.S !== sentenceId,
 		);
 
 		if (updatedContents.length === 0) {
-			// 문장이 다 사라졌으면 책 자체 삭제
 			await ddbDocClient.send(
 				new DeleteItemCommand({
 					TableName: 'LOG_ARCHIVE_BY_USER',
@@ -153,7 +152,6 @@ export default async function handler(
 			);
 			return res.status(200).json({ message: 'Item deleted successfully' });
 		} else {
-			// 아니면 Contents 배열만 갱신
 			const updateResponse = await ddbDocClient.send(
 				new UpdateItemCommand({
 					TableName: 'LOG_ARCHIVE_BY_USER',

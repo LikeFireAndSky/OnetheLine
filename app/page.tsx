@@ -7,7 +7,7 @@ import { useGetLine } from '@/entities/line/api/useGetLine';
 import LinkButton from '@/entities/line/ui/LinkButton';
 import LinkCard from '../entities/line/ui/LinkCard';
 import LogInButton from '@/processes/user/ui/LogInButton';
-import QuoteCard from '@/features/capture/ui/Capture';
+import { StatisticsContainer } from '@/features/statistics/ui/StatisticsContainer';
 
 const Home = () => {
 	const [ref, inView] = useInView(() => ({
@@ -26,7 +26,7 @@ const Home = () => {
 		<animated.section
 			ref={ref}
 			style={inView}
-			className="w-full h-full flex flex-col p-3 mt-3 space-y-5"
+			className="w-full h-fit flex flex-col p-3 mt-3 space-y-5"
 		>
 			<div className="w-full flex flex-col space-y-1">
 				<h1 className="text-2xl font-semibold">One the Line</h1>
@@ -66,6 +66,7 @@ const Home = () => {
 					isError={isError}
 				/>
 			</div>
+			<StatisticsContainer />
 		</animated.section>
 	);
 };
