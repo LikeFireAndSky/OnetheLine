@@ -7,6 +7,7 @@ import { randomUUID } from 'crypto';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
+import { updateUserStatisticsOnAdd } from '@/processes/user/lib/updateUserStatisticsOnAdd';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -92,11 +93,21 @@ export default async function handler(
 	};
 
 	try {
-		// UpdateItemCommand를 인라인으로 생성하여 DynamoDB에 업데이트 요청을 보냅니다.
+		// 1️⃣ 문장을 LOG_ARCHIVE_BY_USER에 저장
 		const updateResponse = await ddbDocClient.send(
 			new UpdateItemCommand(updateParams),
 		);
 
+		// 2️⃣ 📊 통계 테이블 업데이트 추가
+		await updateUserStatisticsOnAdd({
+			userId,
+			category,
+			bookIsbn,
+			bookTitle,
+			timestamp,
+		});
+
+		// 3️⃣ 응답 반환
 		return res.status(200).json({
 			message: 'Sentence added successfully',
 			data: { updatedData: updateResponse.Attributes },

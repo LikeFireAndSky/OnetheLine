@@ -23,8 +23,6 @@ import {
 import QuoteCardModal from '@/features/capture/ui/Capture';
 import { ReadingLog } from '@/app/line/page';
 import { removeParentheses } from '@/shared/lib/utils';
-import { useBookData } from '@/shared/share/BookDataContext';
-import { useRouter } from 'next/navigation';
 
 export type Contents = {
 	SentenceID: string;
@@ -32,7 +30,7 @@ export type Contents = {
 	Content: string;
 };
 
-type AccordionComponentProps = {
+export type AccordionComponentProps = {
 	bookIndex: number;
 } & ReadingLog;
 
@@ -46,12 +44,24 @@ const AccordionComponent = ({
 	Category,
 	BookPublisher,
 }: AccordionComponentProps) => {
-	const { open, onClick, krTime, previewData, contentsLength } = useAccordion({
+	const {
+		open,
+		onClick,
+		krTime,
+		previewData,
+		contentsLength,
+		ifOpenClose,
+		handleClick,
+	} = useAccordion({
 		bookIndex,
+		BookId,
+		BookPublishedDate,
+		BookAuthor,
+		BookTitle,
 		Contents,
+		Category,
+		BookPublisher,
 	});
-	const { setBookData } = useBookData();
-	const router = useRouter();
 
 	const bgUi = (category: string) => {
 		switch (category) {
@@ -107,25 +117,6 @@ const AccordionComponent = ({
 				return '#D9763D';
 			default:
 				return '#B8B8B8';
-		}
-	};
-
-	const handleClick = () => {
-		setBookData({
-			BookId,
-			BookAuthor,
-			BookTitle,
-			BookPublishedDate,
-			Contents,
-			Category,
-			BookPublisher,
-		});
-		router.push('/log');
-	};
-
-	const ifOpenClose = () => {
-		if (open === bookIndex) {
-			onClick();
 		}
 	};
 
