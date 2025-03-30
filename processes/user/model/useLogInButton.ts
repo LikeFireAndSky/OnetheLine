@@ -1,20 +1,16 @@
 'use client';
 
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 const useLogInButton = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
-	const { update } = useSession();
 	const router = useRouter();
 
 	const handleSignIn = () => router.push('user-login');
 
 	const handleSignOut = async () => {
-		await signOut({
-			redirect: false,
-		});
-		await update();
-
+		await signOut({ redirect: false });
+		// await update(); ❌ 제거
 		window.location.reload();
 	};
 
