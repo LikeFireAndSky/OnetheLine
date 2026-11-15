@@ -10,13 +10,13 @@ const useLogInButton = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
 
 	const handleSignOut = async () => {
 		await signOut({ redirect: false });
-		// await update(); ❌ 제거
 		window.location.reload();
 	};
 
 	const returnData = {
 		buttonText: isAuthenticated ? '로그아웃' : '로그인',
-		buttonColor: isAuthenticated ? 'bg-gray-400' : 'bg-black',
+		// btn-ink: 먹색 버튼, btn-line: 테두리 버튼 (app/globals.css)
+		buttonClass: isAuthenticated ? 'btn-line' : 'btn-ink',
 		onClick: isAuthenticated ? () => handleSignOut() : () => handleSignIn(),
 	};
 

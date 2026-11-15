@@ -1,5 +1,5 @@
 import { changeTime } from '@/shared/lib/utils';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import useDeleteLog from '../api/useDeleteLog';
 import { Contents } from '@/app/line/page';
 import { useBookData } from '@/shared/share/BookDataContext';
@@ -52,10 +52,14 @@ const useAccordion = ({
 	}, [bookIndex]);
 
 	// previewData: contents가 없으면 빈 배열, 있으면 무작위로 한 요소를 선택하여 배열로 반환
-	const previewData =
-		!Contents || Contents.length === 0
-			? []
-			: [Contents[Math.floor(Math.random() * Contents.length)]];
+	// (렌더링마다 바뀌어 깜빡이지 않도록 contents가 바뀔 때만 다시 고름)
+	const previewData = useMemo(
+		() =>
+			!Contents || Contents.length === 0
+				? []
+				: [Contents[Math.floor(Math.random() * Contents.length)]],
+		[Contents],
+	);
 
 	// contentsLength: contents 배열의 길이 (존재하지 않으면 0)
 	const contentsLength = Contents?.length ?? 0;

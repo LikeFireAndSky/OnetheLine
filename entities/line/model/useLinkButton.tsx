@@ -1,16 +1,16 @@
 import React from 'react';
 import {
-	ListBulletIcon,
-	PlusIcon,
-	IdentificationIcon,
-} from '@heroicons/react/16/solid';
+	BookOpenIcon,
+	DocumentTextIcon,
+	PencilSquareIcon,
+	ShieldCheckIcon,
+} from '@heroicons/react/24/outline';
 
 // 버튼 타입 정의
 export type LinkButtonTypes = 'record' | 'view' | 'term' | 'privacy';
 
 // 버튼 설정 타입 정의
 type ButtonConfig = {
-	color: string;
 	text: string;
 	className: string;
 	icon: JSX.Element;
@@ -19,39 +19,33 @@ type ButtonConfig = {
 
 // 버튼 설정을 반환하는 순수 함수
 const getButtonConfig = (type: LinkButtonTypes): ButtonConfig => {
-	// 공통 스타일 상수
+	// 공통 스타일 상수 (btn-ink: 먹색 버튼, btn-line: 테두리 버튼 → app/globals.css)
 	const iconClass = 'w-5 h-5';
-	const baseClassName =
-		'w-full flex items-center justify-center gap-1 rounded-sm';
 
 	// 버튼 타입별 설정
 	const configMap: Record<LinkButtonTypes, ButtonConfig> = {
 		record: {
-			color: 'black',
 			text: '기록하기',
-			className: baseClassName,
-			icon: <PlusIcon className={iconClass} />,
+			className: 'btn-ink',
+			icon: <PencilSquareIcon className={iconClass} />,
 			href: '/log',
 		},
 		view: {
-			color: 'white',
 			text: '기록보기',
-			className: `${baseClassName} border border-black`,
-			icon: <ListBulletIcon className={iconClass} />,
+			className: 'btn-line',
+			icon: <BookOpenIcon className={iconClass} />,
 			href: '/line',
 		},
 		term: {
-			color: 'black',
 			text: '서비스 이용 약관',
-			className: baseClassName,
-			icon: <ListBulletIcon className={iconClass} />,
+			className: 'btn-line',
+			icon: <DocumentTextIcon className={iconClass} />,
 			href: '/term',
 		},
 		privacy: {
-			color: 'black',
 			text: '개인정보 처리방침',
-			className: baseClassName,
-			icon: <IdentificationIcon className={iconClass} />,
+			className: 'btn-line',
+			icon: <ShieldCheckIcon className={iconClass} />,
 			href: '/privacy',
 		},
 	};

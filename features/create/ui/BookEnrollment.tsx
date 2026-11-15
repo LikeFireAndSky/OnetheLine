@@ -1,17 +1,22 @@
-import {
-	Button,
-	Input,
-	Option,
-	Select,
-	Textarea,
-} from '@material-tailwind/react';
+import { Input, Option, Select, Textarea } from '@material-tailwind/react';
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import useBookEnrollment from '../model/useBookEnrollment';
 import { bookCategoriesKor } from '../config/bookEnrollmentConfig';
 import { BookDialogs } from './BookDialog';
-import { PlusIcon } from '@heroicons/react/16/solid';
+import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { BookData } from '@/shared/share/BookDataContext';
+
+// 입력 오류 문구
+const FieldError = ({ message }: { message?: string }) =>
+	message ? (
+		<p
+			role="alert"
+			className="mt-1.5 text-[13px] text-seal"
+		>
+			{message}
+		</p>
+	) : null;
 
 const BookEnrollment = ({ bookData }: { bookData?: BookData }) => {
 	const {
@@ -32,60 +37,67 @@ const BookEnrollment = ({ bookData }: { bookData?: BookData }) => {
 	} = useBookEnrollment(bookData);
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
-			<div className="space-y-4 pb-6">
-				{/* Book Name */}
+		<form
+			onSubmit={handleSubmit(onSubmit)}
+			className="paper w-full px-5 pt-6 pb-5"
+		>
+			<div className="space-y-5">
+				{/* 책 검색 */}
 				<div>
-					<div className="grid gap-1">
-						<div className="grid grid-flow-col gap-1">
-							<Input
-								className="col-span-4"
-								label="책 검색하기"
-								crossOrigin={'anonymous'}
-								onChange={e => setSearchQuery(e.target.value)}
-							/>
-							<Button
-								className="p-1"
-								onClick={handleOpen}
-							>
-								검색하기
-							</Button>
-						</div>
-						<BookDialogs
-							open={open}
-							isLoading={isLoading}
-							isError={isError}
-							searchResults={searchResults}
-							handleOpen={handleOpen}
-							handleSelectBook={handleSelectBook}
+					<div className="flex items-start gap-2">
+						<Input
+							color="gray"
+							label="책 검색하기"
+							crossOrigin={'anonymous'}
+							containerProps={{ className: 'min-w-0 flex-1' }}
+							onChange={e => setSearchQuery(e.target.value)}
 						/>
+						<button
+							type="button"
+							className="btn-ink h-10 w-auto shrink-0 px-4 text-[14px]"
+							onClick={handleOpen}
+						>
+							<MagnifyingGlassIcon
+								aria-hidden
+								className="w-4 h-4"
+							/>
+							검색
+						</button>
 					</div>
+					<BookDialogs
+						open={open}
+						isLoading={isLoading}
+						isError={isError}
+						searchResults={searchResults}
+						handleOpen={handleOpen}
+						handleSelectBook={handleSelectBook}
+					/>
 				</div>
+
+				{/* 책 이름 */}
 				<div>
 					<Input
+						color="gray"
 						label="책 이름"
 						crossOrigin={'anonymous'}
 						readOnly={true}
 						value={getBookTitle()}
 					/>
-					<div>
-						{errors.bookTitle && (
-							<p className="text-red-500 text-sm mt-1">
-								{errors.bookTitle.message}
-							</p>
-						)}
-					</div>
+					<FieldError message={errors.bookTitle?.message} />
 				</div>
-				{/* Category */}
+
+				{/* 카테고리 */}
 				<div>
 					<Controller
 						name="category"
 						control={control}
 						render={({ field }) => (
 							<Select
+								color="gray"
 								label="책 카테고리"
 								{...field}
-								placeholder="Select a category"
+								placeholder="카테고리를 선택하세요"
+								menuProps={{ className: 'bg-hanji-light' }}
 							>
 								{bookCategoriesKor.map(category => (
 									<Option
@@ -93,54 +105,51 @@ const BookEnrollment = ({ bookData }: { bookData?: BookData }) => {
 										value={category.type}
 										className="w-full flex justify-between"
 									>
-										<div className="w-full flex justify-between items-center gap-2">
+										<div className="w-full flex justify-between items-center gap-2 text-ink">
 											<p>{category.kor}</p>
-											<p className={`w-3 h-3 rounded-full ${category.color}`} />
+											<p
+												aria-hidden
+												className={`w-3 h-3 rounded-full ${category.color}`}
+											/>
 										</div>
 									</Option>
 								))}
 							</Select>
 						)}
 					/>
-					{errors.category && (
-						<p className="text-red-500 text-sm mt-1">
-							{errors.category.message}
-						</p>
-					)}
+					<FieldError message={errors.category?.message} />
 				</div>
 
-				{/* Passage */}
+				{/* 구절 */}
 				<div>
 					<Textarea
+						color="gray"
 						{...register('sentence')}
 						label="나만의 구절"
 						rows={7}
+						className="font-serif text-[16px] leading-[1.8] text-ink"
 					/>
-					{errors.sentence && (
-						<p className="text-red-500 text-sm mt-1">
-							{errors.sentence.message}
-						</p>
-					)}
+					<FieldError message={errors.sentence?.message} />
 				</div>
 			</div>
-			<div>
-				<Button
-					type="submit"
-					className="ml-auto"
-					disabled={mutationLoading}
-				>
-					{mutationLoading ? (
-						<span className="flex items-center gap-1 animate-pulse">
-							등록 중...
-						</span>
-					) : (
-						<span className="flex items-center gap-1">
-							<PlusIcon className="h-4" />
-							등록하기
-						</span>
-					)}
-				</Button>
-			</div>
+
+			<button
+				type="submit"
+				className="btn-ink mt-6"
+				disabled={mutationLoading}
+			>
+				{mutationLoading ? (
+					<span className="animate-pulse">등록 중...</span>
+				) : (
+					<>
+						<PlusIcon
+							aria-hidden
+							className="w-5 h-5"
+						/>
+						등록하기
+					</>
+				)}
+			</button>
 		</form>
 	);
 };

@@ -2,22 +2,15 @@
 
 import React, { useState } from 'react';
 import {
-	Button,
 	Dialog,
 	DialogHeader,
 	DialogBody,
 	DialogFooter,
-	Checkbox,
-	Radio,
-	Card,
-	List,
-	ListItem,
-	ListItemPrefix,
-	IconButton,
 } from '@material-tailwind/react';
-import { Cog6ToothIcon, InboxArrowDownIcon } from '@heroicons/react/16/solid';
+import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { ReadingLog } from '@/app/line/page';
 import { useQuoteCard } from '../model/useCapture';
+import Seal from '@/shared/ui/Seal';
 
 type QuoteCardModalProps = Pick<
 	ReadingLog,
@@ -25,6 +18,15 @@ type QuoteCardModalProps = Pick<
 > & {
 	bookSentence: string;
 };
+
+// 카드 배경 색 (한지와 먹 테마)
+const backgroundColors = [
+	{ label: '한지', value: '#F3EEE4' },
+	{ label: '미색', value: '#FAF7F0' },
+	{ label: '연먹', value: '#E4E0D8' },
+	{ label: '옥빛', value: '#DCE5E3' },
+	{ label: '연분홍', value: '#F3DEDA' },
+];
 
 const QuoteCardModal = ({
 	bookSentence,
@@ -44,28 +46,23 @@ const QuoteCardModal = ({
 		removeSpecialCharacters,
 	} = useQuoteCard({ BookTitle });
 
-	// UI 상태 (화면 전환, 체크박스, 배경색 등)
-	const [view, setView] = useState(false);
+	// UI 상태 (출판사 표시, 배경색)
 	const [showPublisher, setShowPublisher] = useState(false);
-	const [bgColor, setBgColor] = useState('#fdf6e3');
-
-	// 배경 색상 옵션 (UI 전용)
-	const backgroundColors = [
-		{ label: 'yellow', value: '#fdf6e3' },
-		{ label: 'gray', value: '#E9E9E9' },
-		{ label: 'green', value: '#C6DFD6' },
-		{ label: 'pink', value: '#FFECECFF' },
-		{ label: 'white', value: '#FFFFFF' },
-	];
+	const [bgColor, setBgColor] = useState(backgroundColors[0].value);
 
 	return (
 		<>
 			{/* 모달 열기 버튼 */}
 			<button
+				type="button"
 				onClick={handleOpen}
-				className="w-fit"
+				aria-label="구절 카드 이미지로 저장"
+				className="inline-flex h-9 w-9 items-center justify-center rounded-sm text-ink-muted transition-colors hover:bg-hanji-deep hover:text-ink"
 			>
-				<InboxArrowDownIcon className="w-5 h-5" />
+				<ArrowDownTrayIcon
+					aria-hidden
+					className="w-5 h-5"
+				/>
 			</button>
 
 			{/* 모달 */}
@@ -73,94 +70,34 @@ const QuoteCardModal = ({
 				open={open}
 				handler={handleOpen}
 				size="sm"
+				className="rounded-sm bg-hanji-light"
 			>
-				<DialogHeader className="text-lg px-5 flex flex-col items-start relative">
-					<div className="flex items-center justify-between w-full">
-						<div className="flex flex-col items-start">
-							<h1>오늘의 구절</h1>
-							<p className="font-light text-sm">오늘의 구절을 확인해보세요.</p>
-						</div>
-						<IconButton
-							onClick={() => setView(!view)}
-							className={`p-0 text-sm w-6 h-6 ${
-								view ? 'bg-black' : 'bg-gray-500'
-							} transition-colors duration-300 ease-in-out`}
-						>
-							<Cog6ToothIcon
-								className={`p-0 text-sm w-4 h-4 transform transition-transform duration-500 ${
-									!view ? 'rotate-360' : 'rotate-360'
-								}`}
-							/>
-						</IconButton>
-					</div>
-					{/* 배경 색상 라디오 버튼 그룹 (UI 전용) */}
-					<div
-						className={`${
-							view ? 'block opacity-100' : 'hidden opacity-0'
-						} transition-opacity ease-in-out duration-1000`}
-					>
-						<Card className="w-full shadow-md p-0">
-							<p className="text-xs text-gray-600 mt-3 pl-3">배경 색상 선택</p>
-							<List className="flex-row min-w-0 p-2 gap-3">
-								{backgroundColors.map(color => (
-									<ListItem
-										key={color.label}
-										className="p-0 w-fit min-w-0"
-									>
-										<label
-											htmlFor="horizontal-list-react"
-											className="flex cursor-pointer items-center"
-										>
-											<ListItemPrefix className="w-fit mr-0">
-												<Radio
-													crossOrigin="anonymous"
-													type="radio"
-													name="bgColor"
-													color={color.label as any}
-													containerProps={{ className: 'p-1' }}
-													value={color.value}
-													checked={bgColor === color.value}
-													onChange={e => setBgColor(e.target.value)}
-												/>
-											</ListItemPrefix>
-										</label>
-									</ListItem>
-								))}
-							</List>
-						</Card>
-					</div>
+				<DialogHeader className="flex flex-col items-start gap-0.5 px-5 pb-2">
+					<h2 className="font-serif text-[19px] font-bold text-ink">
+						구절 카드 만들기
+					</h2>
+					<p className="font-sans text-[14px] font-normal text-ink-muted">
+						배경을 고르고 이미지로 저장해 보세요.
+					</p>
 				</DialogHeader>
-				<DialogBody className="flex flex-col items-center my-[-1rem]">
+				<DialogBody className="flex flex-col items-center px-5 py-2">
+					{/* 이미지로 저장되는 카드 (html2canvas가 읽는 영역) */}
 					<div
-						className="shadow-xl"
 						ref={quoteRef}
+						className="relative flex w-full max-w-[420px] flex-col items-center justify-center text-center text-ink shadow-lg transition-colors duration-500"
 						style={{
-							width: '100%',
-							maxWidth: '500px',
 							aspectRatio: '4/5',
 							backgroundColor: bgColor,
-							padding: '7%',
-							position: 'relative',
-							display: 'flex',
-							flexDirection: 'column',
-							justifyContent: 'center',
-							alignItems: 'center',
-							textAlign: 'center',
-							fontFamily: "'Gothic A1', 'Noto Sans KR', sans-serif",
-							borderRadius: '0.75rem',
-							transition: 'background-color 0.5s',
-							fontWeight: 400,
+							padding: '10% 9%',
+							borderRadius: '2px',
 						}}
 					>
 						{/* 구절 텍스트 */}
 						<p
+							className="m-0 whitespace-pre-wrap font-serif"
 							style={{
-								fontSize: '1.8vh',
-								lineHeight: 1.4,
-								whiteSpace: 'pre-wrap',
-								margin: 0,
-								color: '#000',
-								padding: '1%',
+								fontSize: 'clamp(15px, 4.4vw, 20px)',
+								lineHeight: 1.8,
 								wordBreak: 'keep-all',
 							}}
 						>
@@ -168,70 +105,85 @@ const QuoteCardModal = ({
 						</p>
 						{/* 책 정보 */}
 						<p
+							className="text-ink-soft"
 							style={{
-								marginTop: '5%',
-								fontSize: '1.27vh',
-								color: '#000',
-								fontWeight: 600,
+								marginTop: '7%',
+								fontSize: 'clamp(11px, 3vw, 13px)',
+								lineHeight: 1.6,
 							}}
 						>
-							{removeParentheses(BookTitle)}
-							<br />({removeSpecialCharacters(BookAuthor) || '작가 미상'} |{' '}
+							<span className="font-serif font-bold">
+								{removeParentheses(BookTitle)}
+							</span>
+							<br />
+							{removeSpecialCharacters(BookAuthor) || '작가 미상'} ·{' '}
 							{extractYear(BookPublishedDate) || '출판일 미상'}
-							{showPublisher && BookPublisher ? `, ${BookPublisher}` : ''})
+							{showPublisher && BookPublisher ? ` · ${BookPublisher}` : ''}
 						</p>
-						{/* 로고 */}
-						<div
-							style={{
-								position: 'absolute',
-								bottom: '5%',
-								left: '50%',
-								transform: 'translateX(-50%)',
-							}}
-						>
-							<p style={{ fontSize: '1.5vh', margin: 0, color: '#333' }}>
+						{/* 서명: 로고 글자 + 낙관 */}
+						<div className="absolute bottom-[5%] left-0 right-0 flex items-center justify-center gap-2">
+							<p className="m-0 font-serif text-[12px] text-ink-muted">
 								OneTheLine
 							</p>
+							<Seal size="sm" />
 						</div>
 					</div>
-				</DialogBody>
-				<DialogFooter className="flex justify-end gap-3 px-[7%]">
-					{/* SNS 공유용 체크박스 */}
-					<div
-						className={`flex items-center gap-2 ${view ? 'block' : 'hidden'}`}
-					>
-						<Checkbox
-							crossOrigin="anonymous"
+
+					{/* 배경 색 선택 */}
+					<fieldset className="mt-4 w-full max-w-[420px]">
+						<legend className="eyebrow">배경 색</legend>
+						<div className="mt-2 flex gap-3">
+							{backgroundColors.map(color => {
+								const selected = bgColor === color.value;
+								return (
+									<button
+										key={color.value}
+										type="button"
+										aria-label={color.label}
+										aria-pressed={selected}
+										onClick={() => setBgColor(color.value)}
+										className={`h-8 w-8 rounded-full border transition-shadow ${
+											selected
+												? 'border-ink ring-2 ring-ink ring-offset-2 ring-offset-hanji-light'
+												: 'border-rule'
+										}`}
+										style={{ backgroundColor: color.value }}
+									/>
+								);
+							})}
+						</div>
+					</fieldset>
+
+					{/* SNS 공유용: 출판사 표시 */}
+					<label className="mt-3 flex w-full max-w-[420px] cursor-pointer items-center gap-2 text-[14px] text-ink-soft">
+						<input
 							type="checkbox"
-							id="showPublisher"
-							size={16}
-							className="text-primary-500 checked:bg-gray-500 border-gray-500 checked:border-gray-500"
-							containerProps={{ className: 'p-1' }}
+							className="h-4 w-4 accent-[#1F1D1A]"
 							checked={showPublisher}
 							onChange={e => setShowPublisher(e.target.checked)}
 						/>
-						<label
-							htmlFor="showPublisher"
-							className="text-xs text-gray-600"
-						>
-							출판사 표시(SNS 공유용)
-						</label>
-					</div>
-					<div className="w-full flex justify-end gap-2 ">
-						<Button
-							variant="text"
-							onClick={handleOpen}
-							className="w-fit flex items-center justify-center gap-1 rounded-sm border border-black"
-						>
-							닫기
-						</Button>
-						<Button
-							onClick={() => captureScreen(bgColor)}
-							className="w-fit flex items-center justify-center gap-1 rounded-sm"
-						>
-							이미지 다운로드
-						</Button>
-					</div>
+						출판사 표시 (SNS 공유용)
+					</label>
+				</DialogBody>
+				<DialogFooter className="grid grid-cols-2 gap-2 px-5">
+					<button
+						type="button"
+						onClick={handleOpen}
+						className="btn-line h-11"
+					>
+						닫기
+					</button>
+					<button
+						type="button"
+						onClick={() => captureScreen(bgColor)}
+						className="btn-ink h-11"
+					>
+						<ArrowDownTrayIcon
+							aria-hidden
+							className="w-5 h-5"
+						/>
+						이미지 저장
+					</button>
 				</DialogFooter>
 			</Dialog>
 		</>

@@ -2,8 +2,10 @@ import React from 'react';
 
 const page = () => {
 	return (
-		<div className="w-full h-full flex flex-col p-3 mt-3 space-y-5 overflow-scroll">
-			<h2 className="text-h2 font-bold">OneTheLine 서비스 이용약관</h2>
+		<div className="paper mx-4 my-6 flex flex-col space-y-5 px-5 py-6 text-[15px] leading-[1.8] text-ink-soft">
+			<h2 className="font-serif text-h2 text-ink">
+				OneTheLine 서비스 이용약관
+			</h2>
 			제1조 목적 본 이용약관은 “OneTheLine”(이하 OneTheLine)의 서비스의
 			이용조건과 운영에 관한 제반 사항 규정을 목적으로 합니다.
 			<br />

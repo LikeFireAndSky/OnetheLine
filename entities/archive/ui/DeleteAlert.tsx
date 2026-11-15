@@ -2,7 +2,6 @@
 
 import React from 'react';
 import {
-	Button,
 	Dialog,
 	DialogHeader,
 	DialogBody,
@@ -27,44 +26,41 @@ const DeleteDialog = ({
 	return (
 		<>
 			<button
+				type="button"
 				onClick={handleOpen}
-				className='className="text-sm text-gray-500"'
+				aria-label="문장 삭제"
+				className="inline-flex h-9 w-9 items-center justify-center rounded-sm text-ink-muted transition-colors hover:bg-seal-wash hover:text-seal"
 			>
 				{children}
 			</button>
 			<Dialog
 				open={open}
 				size="sm"
-				className="max-w-11/12"
+				className="max-w-11/12 rounded-sm bg-hanji-light"
 				handler={handleOpen}
 			>
-				<DialogHeader>
-					<p className="text-base font-normal">정말로 삭제하시겠습니까?</p>
+				<DialogHeader className="font-serif text-[18px] font-bold text-ink">
+					정말로 삭제하시겠습니까?
 				</DialogHeader>
-				<DialogBody
-					divider
-					className="grid place-items-center gap-4"
-				>
-					<p className="font-thin text-xs">
-						한번 삭제한 문장은 다시 복구할 수 없습니다.
-					</p>
+				<DialogBody className="pt-0 text-[15px] text-ink-soft">
+					한번 삭제한 문장은 다시 복구할 수 없습니다.
 				</DialogBody>
-				<DialogFooter className="space-x-2">
-					<Button
-						variant="text"
-						color="blue-gray"
-						className="border border-blue-gray-300"
+				<DialogFooter className="grid grid-cols-2 gap-2">
+					<button
+						type="button"
+						className="btn-line h-11"
 						onClick={handleOpen}
 					>
 						취소
-					</Button>
-					<Button
-						variant="gradient"
+					</button>
+					<button
+						type="button"
+						className="btn-ink h-11 bg-seal hover:bg-seal-deep"
 						onClick={handleDelete}
 						disabled={deleting}
 					>
-						삭제하기
-					</Button>
+						{deleting ? '삭제 중...' : '삭제하기'}
+					</button>
 				</DialogFooter>
 			</Dialog>
 		</>

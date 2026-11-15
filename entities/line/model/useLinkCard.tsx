@@ -43,7 +43,8 @@ const getLinkCardConfig = ({
 	isLoading,
 	isError,
 }: UseLinkCardProps): LinkCardConfig => {
-	const iconProps = { color: 'black', className: 'w-5 h-5' };
+	// 아이콘 색은 카드의 글자색(먹색 계열)을 따름
+	const iconProps = { className: 'w-4 h-4', 'aria-hidden': true };
 
 	const configMap: Record<LinkCardTypes, LinkCardConfig> = {
 		totalBooks: {

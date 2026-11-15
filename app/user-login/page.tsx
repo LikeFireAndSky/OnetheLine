@@ -4,9 +4,6 @@ import React, { Suspense, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import {
-	Button,
-	Card,
-	CardBody,
 	Dialog,
 	DialogHeader,
 	DialogBody,
@@ -16,6 +13,7 @@ import Image from 'next/image';
 import GOOGLE_IMAGE from '@/public/images/btn_google.svg';
 import NEW_LOGO from '@/public/images/NEW_LOGO.png';
 import Link from 'next/link';
+import Seal from '@/shared/ui/Seal';
 
 // 👉 로그인 후 돌아갈 주소: 같은 사이트 주소만 허용하고 경로로 변환
 // (로그인 실패 후 next-auth가 되돌려 주는 절대 주소도 같은 사이트면 허용)
@@ -63,7 +61,7 @@ const LoginErrorMessage = () => {
 	return (
 		<p
 			role="alert"
-			className="w-full text-sm text-center text-red-500 mb-3"
+			className="w-full mb-3 rounded-sm border border-seal/30 bg-seal-wash px-3 py-2 text-[14px] text-center text-seal-deep"
 		>
 			{getLoginErrorMessage(error)}
 		</p>
@@ -109,71 +107,101 @@ export default function LoginPage() {
 
 	return (
 		<>
-			<Card className="flex w-4/5 mx-auto my-auto px-12 items-center justify-center">
-				<CardBody className="w-full">
-					<div className="w-full flex flex-col items-center space-y-12 pb-3">
-						<Image
-							src={NEW_LOGO}
-							alt="OneTheLine 로고"
-							className="w-72 mx-auto border border-1 rounded-full"
-						/>
-						<div>
-							<h2 className="text-lg font-semibold text-center">
-								OneTheLine 로그인
-							</h2>
-							<p className="text-sm">『하루를 바꾸는 단 한 줄』</p>
+			<section className="flex w-full flex-1 items-center justify-center px-4 py-8">
+				<div className="paper w-full max-w-sm px-7 pt-9 pb-7">
+					<div className="flex flex-col items-center">
+						<div className="relative">
+							<Image
+								src={NEW_LOGO}
+								alt="OneTheLine 로고"
+								className="w-40 rounded-full border border-rule bg-hanji-light"
+								priority
+							/>
+							<Seal
+								size="md"
+								className="absolute -bottom-1 -right-2"
+							/>
 						</div>
+						<h1 className="mt-6 font-serif text-[22px] font-bold text-ink">
+							OneTheLine
+						</h1>
+						<p className="mt-1 font-serif text-[15px] text-ink-muted">
+							『하루를 바꾸는 단 한 줄』
+						</p>
 					</div>
 
-					{/* 로그인 실패 안내 */}
-					<Suspense fallback={null}>
-						<LoginErrorMessage />
-					</Suspense>
+					<div className="mt-8">
+						{/* 로그인 실패 안내 */}
+						<Suspense fallback={null}>
+							<LoginErrorMessage />
+						</Suspense>
 
-					{/* 구글 로그인 버튼 */}
-					<Button
-						className="w-full flex h-14 font-light items-center gap-3 justify-center bg-white hover:bg-black hover:text-white text-black border border-black py-3 px-4 rounded transition mb-3"
-						onClick={handleGoogleLogin}
+						{/* 구글 로그인 버튼 */}
+						<button
+							type="button"
+							className="btn-line h-14 gap-3 bg-hanji-light"
+							onClick={handleGoogleLogin}
+						>
+							<Image
+								src={GOOGLE_IMAGE}
+								alt=""
+								width={22}
+							/>
+							<span>Google로 로그인</span>
+						</button>
+					</div>
+
+					<nav
+						aria-label="서비스 안내"
+						className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[13px] text-ink-muted"
 					>
-						<Image
-							src={GOOGLE_IMAGE}
-							alt="구글 로그인"
-							width={24}
-						/>
-						<span>구글 로그인</span>
-					</Button>
-
-					<div className="flex flex-col gap-y-3 py-3 items-center">
-						<button onClick={handleOpen}>OneTheLine 소개</button>
-						<Link href={'/term'}>서비스 이용약관</Link>
-						<Link href={'/privacy'}>개인정보 처리방침</Link>
-					</div>
-				</CardBody>
-			</Card>
+						<button
+							type="button"
+							onClick={handleOpen}
+							className="underline-offset-4 hover:text-ink hover:underline"
+						>
+							OneTheLine 소개
+						</button>
+						<Link
+							href={'/term'}
+							className="underline-offset-4 hover:text-ink hover:underline"
+						>
+							서비스 이용약관
+						</Link>
+						<Link
+							href={'/privacy'}
+							className="underline-offset-4 hover:text-ink hover:underline"
+						>
+							개인정보 처리방침
+						</Link>
+					</nav>
+				</div>
+			</section>
 
 			{/* 앱 정보 모달 */}
 			<Dialog
 				open={open}
 				handler={setOpen}
+				size="sm"
+				className="rounded-sm bg-hanji-light"
 			>
-				<DialogHeader>OneTheLine이란?</DialogHeader>
-				<DialogBody
-					divider
-					className=" font-light text-sm"
-				>
+				<DialogHeader className="font-serif text-[19px] font-bold text-ink">
+					OneTheLine이란?
+				</DialogHeader>
+				<DialogBody className="pt-0 text-[15px] leading-relaxed text-ink-soft">
 					OneTheLine은 사용자가 하루를 바꿀 한 줄의 문장을 기록하고 공유하는
 					서비스입니다.
-					<strong className=" font-semibold"> Google 로그인</strong>을 통해
+					<strong className="font-bold text-ink"> Google 로그인</strong>을 통해
 					개인화된 경험을 제공하며, 사용자의 문장을 안전하게 저장합니다.
 				</DialogBody>
 				<DialogFooter>
-					<Button
-						variant="gradient"
-						color="black"
+					<button
+						type="button"
+						className="btn-ink h-11"
 						onClick={handleClose}
 					>
 						닫기
-					</Button>
+					</button>
 				</DialogFooter>
 			</Dialog>
 		</>

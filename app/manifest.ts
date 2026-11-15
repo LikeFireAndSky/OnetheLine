@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
 		description: '오늘 하루를 바꿀 최고의 문장을 기록하세요.',
 		start_url: '/',
 		display: 'standalone',
-		background_color: '#ffffff',
-		theme_color: '#000000',
+		background_color: '#F3EEE4',
+		theme_color: '#F3EEE4',
 		icons: [
 			{
 				src: '/assets/logo-192x192.png',

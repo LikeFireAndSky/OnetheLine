@@ -1,28 +1,28 @@
 import {
+	BookOpenIcon,
 	Cog6ToothIcon,
 	HomeIcon,
-	PlusIcon,
-	QueueListIcon,
-} from '@heroicons/react/16/solid';
+	PencilSquareIcon,
+} from '@heroicons/react/24/outline';
 
 export const navItems = [
 	{
-		title: 'HOME',
+		title: '홈',
 		icon: <HomeIcon className="w-6 h-6" />,
 		href: '/',
 	},
 	{
-		title: 'CREATE',
-		icon: <PlusIcon className="w-6 h-6" />,
+		title: '기록',
+		icon: <PencilSquareIcon className="w-6 h-6" />,
 		href: '/log',
 	},
 	{
-		title: 'ARCHIVE',
-		icon: <QueueListIcon className="w-6 h-6" />,
+		title: '서재',
+		icon: <BookOpenIcon className="w-6 h-6" />,
 		href: '/line',
 	},
 	{
-		title: 'SETTING',
+		title: '설정',
 		icon: <Cog6ToothIcon className="w-6 h-6" />,
 		href: '/setting',
 	},

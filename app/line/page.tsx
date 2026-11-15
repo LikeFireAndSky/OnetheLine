@@ -4,7 +4,8 @@ import React from 'react';
 import AccordionComponent from '@/entities/archive/ui/Arccordion';
 import { useGetReadingLog } from '@/entities/archive/api/useGetReadingLog';
 import NoDataLinkCard from '@/entities/archive/ui/NoDataLinkCard';
-import { useInView, animated } from '@react-spring/web';
+import { animated } from '@react-spring/web';
+import { useFadeIn } from '@/shared/lib/useFadeIn';
 
 export type Contents = {
 	SentenceID: string;
@@ -25,30 +26,38 @@ export type ReadingLog = {
 };
 
 const Page = () => {
-	const [ref, inView] = useInView(() => ({
-		from: { opacity: 0 },
-		to: { opacity: 1 },
-		config: {
-			mass: 5,
-			friction: 120,
-			tension: 120,
-		},
-	}));
+	const [ref, fadeIn] = useFadeIn();
 
 	const { data, isLoading, isError } = useGetReadingLog();
 
 	return (
 		<animated.section
 			ref={ref}
-			style={inView}
-			className="w-full h-fit flex flex-col p-3 mt-3 space-y-5"
+			style={fadeIn}
+			className="w-full h-fit flex flex-col px-4 pt-6 pb-8 space-y-4"
 		>
-			<div className="w-full flex flex-col space-y-1">
-				<h1 className="text-2xl font-semibold">View the line</h1>
-				<p className="text-base">오늘 하루를 바꿀 최고의 문장을 기록하세요.</p>
+			<div className="w-full flex flex-col gap-1 pb-2">
+				<h1 className="page-title">나의 서재</h1>
+				<p className="page-subtitle">
+					오늘 하루를 바꿀 최고의 문장을 기록하세요.
+				</p>
 			</div>
-			{isLoading && <div className=" animate-pulse">로딩중...</div>}
-			{isError && <div>Error</div>}
+			{isLoading && (
+				<p
+					role="status"
+					className="paper w-full px-5 py-6 text-[15px] text-ink-muted animate-pulse"
+				>
+					서재를 펼치는 중입니다...
+				</p>
+			)}
+			{isError && (
+				<p
+					role="alert"
+					className="paper w-full px-5 py-6 text-[15px] text-seal"
+				>
+					기록을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
+				</p>
+			)}
 			{data && data.count < 1 && <NoDataLinkCard />}
 			{data &&
 				data.data &&

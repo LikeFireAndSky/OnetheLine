@@ -2,8 +2,10 @@
 
 import React from 'react';
 import useLogInButton from '../model/useLogInButton';
-import { Button } from '@material-tailwind/react';
-import { ArrowRightEndOnRectangleIcon } from '@heroicons/react/16/solid';
+import {
+	ArrowLeftStartOnRectangleIcon,
+	ArrowRightEndOnRectangleIcon,
+} from '@heroicons/react/24/outline';
 
 const LogInButton = ({
 	isAuthenticated,
@@ -12,19 +14,26 @@ const LogInButton = ({
 	isAuthenticated: boolean;
 	isLoading: boolean;
 }) => {
-	const { buttonText, onClick, buttonColor } = useLogInButton({
+	const { buttonText, onClick, buttonClass } = useLogInButton({
 		isAuthenticated,
 	});
+	const Icon = isAuthenticated
+		? ArrowLeftStartOnRectangleIcon
+		: ArrowRightEndOnRectangleIcon;
+
 	return (
-		<Button
-			className={`flex items-center justify-center gap-1 rounded-sm w-full ${buttonColor}`}
+		<button
+			type="button"
+			className={buttonClass}
 			onClick={onClick}
+			disabled={isLoading}
 		>
-			{!isAuthenticated ? (
-				<ArrowRightEndOnRectangleIcon className="w-4 h-4" />
-			) : null}
-			{isLoading ? '로그인 중...' : buttonText}
-		</Button>
+			<Icon
+				aria-hidden
+				className="w-5 h-5"
+			/>
+			{isLoading ? '확인 중...' : buttonText}
+		</button>
 	);
 };
 
