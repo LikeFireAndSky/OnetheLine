@@ -8,6 +8,7 @@ import LinkButton from '@/entities/line/ui/LinkButton';
 import LinkCard from '../entities/line/ui/LinkCard';
 import LogInButton from '@/processes/user/ui/LogInButton';
 import { StatisticsContainer } from '@/features/statistics/ui/StatisticsContainer';
+import RecentBooks from '@/features/shelf/ui/RecentBooks';
 import { useFadeIn } from '@/shared/lib/useFadeIn';
 
 const Home = () => {
@@ -59,6 +60,7 @@ const Home = () => {
 					isError={isError}
 				/>
 			</div>
+			<RecentBooks />
 			<StatisticsContainer />
 		</animated.section>
 	);
