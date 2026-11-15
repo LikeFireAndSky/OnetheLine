@@ -13,7 +13,6 @@ import Image from 'next/image';
 import GOOGLE_IMAGE from '@/public/images/btn_google.svg';
 import NEW_LOGO from '@/public/images/NEW_LOGO.png';
 import Link from 'next/link';
-import Seal from '@/shared/ui/Seal';
 
 // 👉 로그인 후 돌아갈 주소: 같은 사이트 주소만 허용하고 경로로 변환
 // (로그인 실패 후 next-auth가 되돌려 주는 절대 주소도 같은 사이트면 허용)
@@ -110,18 +109,12 @@ export default function LoginPage() {
 			<section className="flex w-full flex-1 items-center justify-center px-4 py-8">
 				<div className="paper w-full max-w-sm px-7 pt-9 pb-7">
 					<div className="flex flex-col items-center">
-						<div className="relative">
-							<Image
-								src={NEW_LOGO}
-								alt="OneTheLine 로고"
-								className="w-40 rounded-full border border-rule bg-hanji-light"
-								priority
-							/>
-							<Seal
-								size="md"
-								className="absolute -bottom-1 -right-2"
-							/>
-						</div>
+						<Image
+							src={NEW_LOGO}
+							alt="OneTheLine 로고"
+							className="w-40 rounded-full border border-rule bg-hanji-light"
+							priority
+						/>
 						<h1 className="mt-6 font-serif text-[22px] font-bold text-ink">
 							OneTheLine
 						</h1>
