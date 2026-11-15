@@ -1,0 +1,24 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # Node 24 LTS로 빌드 (Amplify SSR 런타임도 빌드에 사용한 Node 메이저 버전을 따라감)
+        - nvm install 24
+        - nvm use 24
+        - node -v
+        - npm ci --cache .npm --prefer-offline
+    build:
+      commands:
+        # 콘솔 환경변수는 빌드 시에만 보이므로, SSR 런타임에 필요한 값만 .env.production에 기록
+        # (값은 로그에 출력하지 않으며, 설정된 변수가 없어도 빌드가 실패하지 않도록 || true)
+        - env | grep -E '^(NEXTAUTH_URL|NEXTAUTH_SECRET|COGNITO_CLIENT_ID|COGNITO_CLIENT_SECRET|COGNITO_ISSUER|NAVER_SEARCH_CLIENT_ID|NAVER_SEARCH_CLIENT_SECRET|GOOGLE_CLIENT_ID|DYNAMODB_REGION|NEXT_AWS_ACCESS_KEY_ID|NEXT_AWS_SECRET_ACCESS_KEY)=' >> .env.production || true
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .next/cache/**/*
+      - .npm/**/*
