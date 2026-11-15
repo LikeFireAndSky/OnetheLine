@@ -6,7 +6,7 @@ import {
 import { randomUUID } from 'crypto';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]';
+import { authOptions } from '@/shared/auth/authOptions';
 import { updateUserStatisticsOnAdd } from '@/processes/user/lib/updateUserStatisticsOnAdd';
 
 export default async function handler(
@@ -57,8 +57,6 @@ export default async function handler(
 	const sentenceId = randomUUID();
 	const timestamp = Date.now();
 	const lastUpdatedTime = timestamp.toString();
-
-	console.log('sentenceId:', req.body);
 
 	// DynamoDB UpdateItem 파라미터 설정 (UpdateExpression과 AttributeValues 정의)
 	const updateParams: UpdateItemCommandInput = {
@@ -114,6 +112,6 @@ export default async function handler(
 		});
 	} catch (error) {
 		console.error('Failed to save sentence:', error);
-		return res.status(500).json({ message: 'Failed to save sentence', error });
+		return res.status(500).json({ message: 'Failed to save sentence' });
 	}
 }

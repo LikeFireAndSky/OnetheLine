@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { signIn } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
 import {
 	Button,
 	Card,
@@ -13,9 +14,61 @@ import {
 } from '@material-tailwind/react';
 import Image from 'next/image';
 import GOOGLE_IMAGE from '@/public/images/btn_google.svg';
-import NAVER_IMAGE from '@/public/images/btn_naver.svg';
 import NEW_LOGO from '@/public/images/NEW_LOGO.png';
 import Link from 'next/link';
+
+// 👉 로그인 후 돌아갈 주소: 같은 사이트 주소만 허용하고 경로로 변환
+// (로그인 실패 후 next-auth가 되돌려 주는 절대 주소도 같은 사이트면 허용)
+const getSafeCallbackUrl = (raw: string | null): string => {
+	if (!raw) return '/';
+	// '//evil.com', '/\evil.com' 같은 외부 주소 차단
+	if (raw.startsWith('//') || raw.startsWith('/\\')) return '/';
+	try {
+		const url = new URL(raw, window.location.origin);
+		if (url.origin !== window.location.origin) return '/';
+		const path = `${url.pathname}${url.search}${url.hash}`;
+		// 로그인 페이지로 되돌아오는 루프 방지
+		return path.startsWith('/user-login') ? '/' : path;
+	} catch {
+		return '/';
+	}
+};
+
+// 👉 next-auth 에러 코드별 안내 문구 (쿼리 값은 화면에 그대로 출력하지 않음)
+const getLoginErrorMessage = (error: string): string => {
+	switch (error) {
+		case 'OAuthSignin':
+			return '로그인을 시작하지 못했어요. 잠시 후 다시 시도해 주세요.';
+		case 'OAuthCallback':
+		case 'Callback':
+			return '로그인 처리 중 문제가 발생했어요. 다시 시도해 주세요.';
+		case 'AccessDenied':
+			return '로그인이 취소되었거나 접근이 거부되었어요.';
+		case 'SessionRequired':
+			return '로그인이 필요한 페이지예요. 먼저 로그인해 주세요.';
+		case 'Configuration':
+			return '로그인 설정에 문제가 있어요. 잠시 후 다시 시도해 주세요.';
+		default:
+			return '로그인 중 문제가 발생했어요. 다시 시도해 주세요.';
+	}
+};
+
+// 👉 ?error= 쿼리가 있을 때만 안내 문구 표시 (useSearchParams는 Suspense 안에서 사용)
+const LoginErrorMessage = () => {
+	const searchParams = useSearchParams();
+	const error = searchParams?.get('error');
+
+	if (!error) return null;
+
+	return (
+		<p
+			role="alert"
+			className="w-full text-sm text-center text-red-500 mb-3"
+		>
+			{getLoginErrorMessage(error)}
+		</p>
+	);
+};
 
 export default function LoginPage() {
 	const [open, setOpen] = useState(false);
@@ -47,8 +100,11 @@ export default function LoginPage() {
 			return; // 로그인 중단
 		}
 
-		// 일반 브라우저 → 정상 로그인
-		signIn('google', { redirect: true, callbackUrl: '/' });
+		// 일반 브라우저 → Cognito(Google) 로그인 후 원래 페이지로 이동
+		const callbackUrl = getSafeCallbackUrl(
+			new URLSearchParams(window.location.search).get('callbackUrl'),
+		);
+		signIn('cognito', { redirect: true, callbackUrl });
 	};
 
 	return (
@@ -69,6 +125,11 @@ export default function LoginPage() {
 						</div>
 					</div>
 
+					{/* 로그인 실패 안내 */}
+					<Suspense fallback={null}>
+						<LoginErrorMessage />
+					</Suspense>
+
 					{/* 구글 로그인 버튼 */}
 					<Button
 						className="w-full flex h-14 font-light items-center gap-3 justify-center bg-white hover:bg-black hover:text-white text-black border border-black py-3 px-4 rounded transition mb-3"
@@ -80,21 +141,6 @@ export default function LoginPage() {
 							width={24}
 						/>
 						<span>구글 로그인</span>
-					</Button>
-
-					{/* 네이버 로그인 버튼 → 별도 제한 없음 */}
-					<Button
-						className="w-full flex h-14 font-light items-center gap-3 justify-center bg-white hover:bg-green-600 hover:text-white text-black border border-green-500 py-3 px-4 rounded transition"
-						onClick={() =>
-							signIn('naver', { redirect: true, callbackUrl: '/' })
-						}
-					>
-						<Image
-							src={NAVER_IMAGE}
-							alt="네이버 로그인"
-							width={24}
-						/>
-						<span>네이버 로그인</span>
 					</Button>
 
 					<div className="flex flex-col gap-y-3 py-3 items-center">
@@ -117,8 +163,7 @@ export default function LoginPage() {
 				>
 					OneTheLine은 사용자가 하루를 바꿀 한 줄의 문장을 기록하고 공유하는
 					서비스입니다.
-					<strong className=" font-semibold"> Google 로그인 </strong> 또는{' '}
-					<strong className="font-semibold">Naver 로그인</strong>을 통해
+					<strong className=" font-semibold"> Google 로그인</strong>을 통해
 					개인화된 경험을 제공하며, 사용자의 문장을 안전하게 저장합니다.
 				</DialogBody>
 				<DialogFooter>

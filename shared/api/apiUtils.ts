@@ -2,14 +2,7 @@
 
 import axios from 'axios';
 
-export const findDevelopment = () => {
-	if (process.env.NODE_ENV === 'development') {
-		return 'http://localhost:3000/api';
-	} else {
-		return 'https://onetheline.xyz/api';
-	}
-};
-
+// 같은 출처의 Next.js API 라우트를 호출하므로 상대 경로를 사용합니다.
 export const api = axios.create({
-	baseURL: findDevelopment(),
+	baseURL: '/api',
 });

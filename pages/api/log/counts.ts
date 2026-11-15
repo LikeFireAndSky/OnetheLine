@@ -2,7 +2,7 @@ import { ddbDocClient } from '@/processes/user/lib/ddbDocClient';
 import { QueryCommand, QueryCommandInput } from '@aws-sdk/client-dynamodb';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]';
+import { authOptions } from '@/shared/auth/authOptions';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -15,7 +15,7 @@ export default async function handler(
 
 	// NextAuth로 세션 가져오기; 세션이 없으면 Unauthorized 반환
 	const session = await getServerSession(req, res, authOptions);
-	if (!session || !session.user) {
+	if (!session || !session.user || !session.userId) {
 		return res.status(401).json({ message: 'Unauthorized' });
 	}
 
@@ -27,7 +27,7 @@ export default async function handler(
 		TableName: 'LOG_ARCHIVE_BY_USER',
 		KeyConditionExpression: 'UserId = :userId',
 		ExpressionAttributeValues: {
-			':userId': { S: String(userId) },
+			':userId': { S: userId },
 		},
 	};
 
@@ -54,8 +54,6 @@ export default async function handler(
 		});
 	} catch (error) {
 		console.error('Failed to fetch content count:', error);
-		return res
-			.status(500)
-			.json({ message: 'Failed to fetch content count', error });
+		return res.status(500).json({ message: 'Failed to fetch content count' });
 	}
 }

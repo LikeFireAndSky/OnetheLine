@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]';
+import { authOptions } from '@/shared/auth/authOptions';
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { ddbDocClient } from '@/processes/user/lib/ddbDocClient';
 

@@ -29,10 +29,15 @@ const MOCK_DATA = [
 ];
 
 export default function BookBarChart() {
-	const { data: session, status } = useSession();
+	const { status } = useSession();
 	const isLoggedIn = status === 'authenticated';
 
-	const { data } = useTopBooks();
+	const { data, isLoading } = useTopBooks();
+
+	// 세션 확인 중이거나 로그인 사용자의 데이터를 불러오는 중이면 샘플 데이터 대신 로딩 표시
+	if (status === 'loading' || (isLoggedIn && isLoading)) {
+		return <p className="text-center text-gray-500">로딩 중...</p>;
+	}
 
 	// 괄호 제거 처리
 	const processedData = data?.map(item => {

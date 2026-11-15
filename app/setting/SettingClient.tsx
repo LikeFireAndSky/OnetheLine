@@ -6,11 +6,16 @@ import React from 'react';
 import { Card, CardFooter, CardBody } from '@material-tailwind/react';
 import { useInView, animated } from '@react-spring/web';
 
+// 화면에 필요한 계정 정보만 전달받음 (로그인하지 않았다면 null)
+export type SettingAccount = {
+	email: string;
+};
+
 interface SettingClientProps {
-	session: any; // 실제로는 NextAuth Session 타입을 지정해도 됨
+	account: SettingAccount | null;
 }
 
-export default function SettingClient({ session }: SettingClientProps) {
+export default function SettingClient({ account }: SettingClientProps) {
 	// React Spring 설정
 	const [ref, inView] = useInView(() => ({
 		from: { opacity: 0 },
@@ -35,13 +40,13 @@ export default function SettingClient({ session }: SettingClientProps) {
 						<p className="text-base">설정</p>
 
 						{/* 세션이 있다면 이름/이메일 표시 */}
-						{session?.user ? (
+						{account ? (
 							<div className="my-3">
 								<h1 className="text-2xl font-semibold text-black">Account</h1>
 
 								<div className="text-sm">
 									<p className="text-base">계정</p>
-									<strong>Email:</strong> {session.user.email}
+									<strong>Email:</strong> {account.email}
 								</div>
 							</div>
 						) : (
@@ -50,7 +55,7 @@ export default function SettingClient({ session }: SettingClientProps) {
 
 						{/* 로그인 / 로그아웃 버튼 */}
 						<LogInButton
-							isAuthenticated={!!session?.user}
+							isAuthenticated={!!account}
 							isLoading={false}
 						/>
 					</CardBody>

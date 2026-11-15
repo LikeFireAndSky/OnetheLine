@@ -1,22 +1,10 @@
 import { api } from '@/shared/api/apiUtils';
 import { useMutation } from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 
 export const usePutReadingLog = () => {
-	const { data: session } = useSession();
-
-	if (!session) {
-		redirect('/login');
-	}
-
-	const userId = session.userId as string;
-
+	// userId는 서버가 세션에서 추출하므로 요청 본문에 포함하지 않습니다.
 	const putReadingLog = async (data: any) => {
-		const response = await api.post('/log/enrollment', {
-			userId,
-			...data,
-		});
+		const response = await api.post('/log/enrollment', data);
 		return response.data;
 	};
 

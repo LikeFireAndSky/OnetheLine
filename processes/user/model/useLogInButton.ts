@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 const useLogInButton = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
 	const router = useRouter();
 
-	const handleSignIn = () => router.push('user-login');
+	const handleSignIn = () => router.push('/user-login');
 
 	const handleSignOut = async () => {
 		await signOut({ redirect: false });
