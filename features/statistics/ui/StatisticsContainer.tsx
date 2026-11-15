@@ -7,9 +7,9 @@ import RecordCalendar from './RecordCalendar';
 export const StatisticsContainer = () => {
 	return (
 		<section className="w-full flex flex-col items-center space-y-4">
+			<RecordCalendar />
 			<CategoryPieChart />
 			<BookBarChart />
-			<RecordCalendar />
 		</section>
 	);
 };

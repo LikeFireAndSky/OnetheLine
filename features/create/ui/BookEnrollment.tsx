@@ -122,8 +122,10 @@ const BookEnrollment = ({ bookData }: { bookData?: BookData }) => {
 
 				{/* 구절 */}
 				<div>
+					{/* 최근 읽은 책/서재에서 책을 골라 들어오면 바로 입력할 수 있게 커서를 둠 */}
 					<Textarea
 						color="gray"
+						autoFocus={!!bookData?.BookId}
 						{...register('sentence')}
 						label="나만의 구절"
 						rows={7}
