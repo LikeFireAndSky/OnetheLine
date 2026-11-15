@@ -32,19 +32,3 @@ export const useTopBooks = () =>
 			return data;
 		},
 	});
-
-type CumulativePoint = {
-	date: string;
-	cumulative: number;
-};
-
-export const useRecentCumulative = () =>
-	useQuery<CumulativePoint[]>({
-		queryKey: ['stat', 'cumulative'],
-		queryFn: async () => {
-			const res = await fetch('/api/stat/recent-daily-summary');
-			if (!res.ok) throw new Error('Failed to fetch cumulative data');
-			const { data } = await res.json();
-			return data;
-		},
-	});
