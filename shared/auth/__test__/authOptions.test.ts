@@ -39,7 +39,7 @@ describe('authOptions', () => {
 		expect(provider.options.authorization).toEqual({
 			params: { scope: 'openid email profile', identity_provider: 'Google' },
 		});
-		expect(provider.options.checks).toEqual(['pkce', 'state']);
+		expect(provider.options.checks).toEqual(['pkce', 'state', 'nonce']);
 	});
 
 	describe('signIn', () => {

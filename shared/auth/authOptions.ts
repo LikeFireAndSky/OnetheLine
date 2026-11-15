@@ -82,8 +82,9 @@ export const authOptions: NextAuthOptions = {
 					identity_provider: GOOGLE_PROVIDER_NAME,
 				},
 			},
-			// 기본값은 state만 검사하므로 PKCE를 추가 (인가 코드 탈취/주입 방지)
-			checks: ['pkce', 'state'],
+			// 기본값은 state만 검사하므로 PKCE(인가 코드 탈취/주입 방지)와 nonce(ID 토큰 재사용 방지)를 추가
+			// nonce를 보내지 않으면 Cognito가 Google을 거치는 첫 로그인에서 자체 nonce를 넣어 'nonce mismatch'로 실패함
+			checks: ['pkce', 'state', 'nonce'],
 		}),
 	],
 
