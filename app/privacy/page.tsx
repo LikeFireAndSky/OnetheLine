@@ -2,9 +2,11 @@ import React from 'react';
 
 const page = () => {
 	return (
-		<div className="w-full h-full flex flex-col p-3 mt-3 space-y-5 overflow-scroll">
+		<div className="paper mx-4 my-6 flex flex-col space-y-5 px-5 py-6 text-[15px] leading-[1.8] text-ink-soft">
 			<div>
-				<h2 className="text-h2 font-bold">OneTheLine 개인정보처리방침</h2>
+				<h2 className="font-serif text-h2 text-ink">
+					OneTheLine 개인정보처리방침
+				</h2>
 				OneTheLine은 개인정보보호법 제30조에 따라 정보주체의 개인정보를 보호하고
 				이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과
 				같이 개인정보처리방침을 수립 • 공개합니다.
@@ -22,7 +24,9 @@ const page = () => {
 				id="todiv"
 				className="flex flex-col gap-3"
 			>
-				<h3 className="text-h3">1. 개인정보 수집 항목 및 이용 목적</h3>
+				<h3 className="font-serif text-h3 text-ink">
+					1. 개인정보 수집 항목 및 이용 목적
+				</h3>
 				<div>
 					1. 회사의 서비스 이용 과정에서 아래 정보가 자동 생성되어 수집될 수
 					있습니다. - 서비스 이용기록, 접속 로그, IP 정보, 쿠키, 불법 및 부정
@@ -131,7 +135,9 @@ const page = () => {
 				id="todiv"
 				className="flex flex-col gap-3"
 			>
-				<h3 className="text-h3">2. 개인정보 수집 방법 및 동의</h3>
+				<h3 className="font-serif text-h3 text-ink">
+					2. 개인정보 수집 방법 및 동의
+				</h3>
 				<div>
 					1. 개인정보 수집 방법
 					<br />
@@ -172,7 +178,7 @@ const page = () => {
 				id="todiv"
 				className="flex flex-col gap-3"
 			>
-				<h3 className="text-h3">3. 개인정보의 파기</h3>
+				<h3 className="font-serif text-h3 text-ink">3. 개인정보의 파기</h3>
 				<div>
 					1. 정보주체는 회사에 대해 언제든지 다음 각 호의 개인정보 보호 관련
 					권리를 행사할 수 있습니다. <br />
@@ -214,7 +220,9 @@ const page = () => {
 				id="todiv"
 				className="flex flex-col gap-3"
 			>
-				<h3 className="text-h3">4. 개인정보 보호책임자 및 권익침해 구제방법</h3>
+				<h3 className="font-serif text-h3 text-ink">
+					4. 개인정보 보호책임자 및 권익침해 구제방법
+				</h3>
 				<div>
 					1. 회사는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보
 					처리와 관련한 이용자의 불만처리, 개인정보 열람청구 접수 및 처리,
@@ -262,7 +270,7 @@ const page = () => {
 				id="todiv"
 				className="flex flex-col gap-3"
 			>
-				<h3 className="text-h3">
+				<h3 className="font-serif text-h3 text-ink">
 					5. 개인정보 자동수집 장치의 설치∙운영 및 그 거부에 관한 사항
 				</h3>
 				<div>

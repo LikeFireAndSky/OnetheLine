@@ -6,7 +6,7 @@ import RecentLineChart from './RecentLineChart';
 
 export const StatisticsContainer = () => {
 	return (
-		<section className="w-full flex flex-col items-center pb-3 space-y-5">
+		<section className="w-full flex flex-col items-center space-y-4">
 			<CategoryPieChart />
 			<BookBarChart />
 			<RecentLineChart />

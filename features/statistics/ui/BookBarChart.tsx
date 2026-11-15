@@ -1,24 +1,21 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
+import { useReducedMotion } from '@react-spring/web';
 import {
 	Bar,
 	BarChart,
 	XAxis,
 	YAxis,
-	Tooltip,
 	ResponsiveContainer,
 	Cell,
+	LabelList,
 } from 'recharts';
-import {
-	Card,
-	CardHeader,
-	CardBody,
-	Typography,
-} from '@material-tailwind/react';
 import { useTopBooks } from '../api/useCategorySummary';
+import { CHART_COLORS, CHART_TICK, RANK_COLORS } from '../config/chartTheme';
+import { ChartCard, ChartMessage } from './ChartCard';
 
-const COLORS = ['#4E5FBF', '#1D3159', '#8DA633', '#F2B544', '#D9763D'];
+const TITLE = '책별 문장 수 Top 5';
 
 const MOCK_DATA = [
 	{ bookTitle: '데미안', count: 7 },
@@ -28,15 +25,24 @@ const MOCK_DATA = [
 	{ bookTitle: '총 균 쇠', count: 2 },
 ];
 
+// 세로축 책 제목은 9자까지만 표시 (긴 제목이 막대를 가리지 않도록)
+const MAX_TITLE_LENGTH = 9;
+
 export default function BookBarChart() {
 	const { status } = useSession();
+	const reduceMotion = !!useReducedMotion();
 	const isLoggedIn = status === 'authenticated';
 
 	const { data, isLoading } = useTopBooks();
 
 	// 세션 확인 중이거나 로그인 사용자의 데이터를 불러오는 중이면 샘플 데이터 대신 로딩 표시
 	if (status === 'loading' || (isLoggedIn && isLoading)) {
-		return <p className="text-center text-gray-500">로딩 중...</p>;
+		return (
+			<ChartMessage
+				title={TITLE}
+				message="데이터를 불러오는 중입니다..."
+			/>
+		);
 	}
 
 	// 괄호 제거 처리
@@ -47,75 +53,73 @@ export default function BookBarChart() {
 
 	const barData = isLoggedIn ? processedData || [] : MOCK_DATA;
 
-	return (
-		<Card className="w-full">
-			<CardHeader
-				floated={false}
-				shadow={false}
-				className="pb-2"
-			>
-				<Typography
-					variant="h6"
-					color="blue-gray"
-				>
-					📚 책별 문장 수 Top 5
-				</Typography>
-				<Typography
-					variant="small"
-					color="gray"
-					className="font-light"
-				>
-					{isLoggedIn
-						? '가장 많은 line을 남긴 책들'
-						: '샘플 데이터 (로그인 필요)'}
-				</Typography>
-			</CardHeader>
+	if (barData.length === 0) {
+		return (
+			<ChartMessage
+				title={TITLE}
+				message="아직 기록한 책이 없어요."
+			/>
+		);
+	}
 
-			<CardBody className="pt-0 h-[300px]">
-				<ResponsiveContainer
-					width="100%"
-					height="100%"
+	return (
+		<ChartCard
+			title={TITLE}
+			subtitle={
+				isLoggedIn ? '가장 많은 문장을 남긴 책들' : '샘플 데이터 (로그인 필요)'
+			}
+			height={250}
+		>
+			<ResponsiveContainer
+				width="100%"
+				height="100%"
+			>
+				<BarChart
+					data={barData}
+					layout="vertical"
+					margin={{ left: 0, right: 28, top: 4, bottom: 4 }}
 				>
-					<BarChart
-						data={barData}
-						layout="vertical"
-						margin={{ left: -25, top: 10, bottom: 10 }}
+					<XAxis
+						type="number"
+						allowDecimals={false}
+						hide
+					/>
+					<YAxis
+						type="category"
+						dataKey="bookTitle"
+						width={112}
+						tickLine={false}
+						axisLine={{ stroke: CHART_COLORS.rule }}
+						tick={{ ...CHART_TICK, fill: CHART_COLORS.inkSoft }}
+						tickFormatter={(value: string) =>
+							value.length > MAX_TITLE_LENGTH
+								? `${value.slice(0, MAX_TITLE_LENGTH)}…`
+								: value
+						}
+					/>
+					<Bar
+						dataKey="count"
+						barSize={22}
+						isAnimationActive={!reduceMotion}
+						radius={[0, 2, 2, 0]}
 					>
-						<XAxis
-							type="number"
-							allowDecimals={false}
-							className="text-xs font-light"
-						/>
-						<YAxis
-							type="category"
-							dataKey="bookTitle"
-							width={100} // 간격 조절
-							tickLine={false}
-							tickMargin={5}
-							tickFormatter={value =>
-								value.length > 20 ? value.slice(0, 20) + '...' : value
-							}
-							//글자 왼쪽 정렬
-							tick={{ textAnchor: 'middle', dx: -30, dy: 0 }}
-							axisLine={true}
-							className="text-[9px] font-light flex"
-						/>
-						<Bar
+						{barData.map((entry, index) => (
+							<Cell
+								key={`${entry.bookTitle}-${index}`}
+								fill={RANK_COLORS[index % RANK_COLORS.length]}
+							/>
+						))}
+						{/* 막대 끝에 문장 수 표시 */}
+						<LabelList
 							dataKey="count"
-							fill="currentColor"
-							barSize={27}
-							radius={[0, 4, 4, 0]}
-						>
-							{barData.map((entry, index) => (
-								<Cell
-									key={`cell-${index}`}
-									fill={COLORS[index % COLORS.length]}
-								/>
-							))}
-						</Bar>
-					</BarChart>
-				</ResponsiveContainer>
-			</CardBody>
-		</Card>
+							position="right"
+							fill={CHART_COLORS.inkSoft}
+							fontSize={12}
+							fontWeight={700}
+						/>
+					</Bar>
+				</BarChart>
+			</ResponsiveContainer>
+		</ChartCard>
 	);
 }

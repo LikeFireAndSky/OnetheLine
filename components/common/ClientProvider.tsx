@@ -6,6 +6,7 @@ import type { Session } from 'next-auth';
 import { ThemeProvider } from '@material-tailwind/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Globals, useReducedMotion } from '@react-spring/web';
 import { BookDataProvider } from '@/shared/share/BookDataContext';
 
 const ClientProvider = ({
@@ -26,58 +27,16 @@ const ClientProvider = ({
 			}),
 	);
 
-	const theme = {
-		radio: {
-			defaultProps: {
-				color: 'gray',
-				label: undefined,
-				icon: undefined,
-				ripple: true,
-				className: '',
-				disabled: false,
-				containerProps: undefined,
-				labelProps: undefined,
-				iconProps: undefined,
-			},
-			valid: {
-				colors: ['yellow', 'brown', 'white', 'blue', 'gray'],
-			},
-			styles: {
-				colors: {
-					yellow: {
-						color: 'text-coffee',
-						border: 'checked:border-coffee',
-						before: 'checked:before:bg-coffee',
-					},
-					gray: {
-						color: 'text-grayey',
-						border: 'checked:border-grayey',
-						before: 'checked:before:bg-grayey',
-					},
-					green: {
-						color: 'text-greeney',
-						border: 'checked:border-greeney',
-						before: 'checked:before:bg-greeney',
-					},
-					pink: {
-						color: 'text-pinkey',
-						border: 'checked:border-pinkey',
-						before: 'checked:before:bg-pinkey',
-					},
-					white: {
-						color: 'text-white',
-						border: 'checked:border-bg-gray-400',
-						before: 'checked:before:bg-gray-400',
-					},
-				},
-			},
-		},
-	};
+	// OS의 '동작 줄이기' 설정을 켠 사용자에게는 애니메이션 없이 바로 표시
+	const prefersReducedMotion = useReducedMotion();
+	React.useEffect(() => {
+		Globals.assign({ skipAnimation: !!prefersReducedMotion });
+	}, [prefersReducedMotion]);
 
 	return (
 		<SessionProvider session={session}>
 			<QueryClientProvider client={queryClient}>
-				<ThemeProvider value={theme}>
+				<ThemeProvider>
 					<BookDataProvider>{children}</BookDataProvider>
 				</ThemeProvider>
 				<ReactQueryDevtools initialIsOpen={false} />

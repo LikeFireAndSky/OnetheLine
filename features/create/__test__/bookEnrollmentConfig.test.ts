@@ -3,21 +3,28 @@ import { z } from 'zod';
 import {
 	getCategoryColor,
 	getCategoryKor,
+	getCategoryHex,
 	bookSchema,
 } from '../config/bookEnrollmentConfig';
 
 describe('Book Enrollment Config', () => {
 	describe('Category Functions', () => {
 		it('should return correct color for valid category', () => {
-			expect(getCategoryColor('business-economics')).toBe('bg-[#4E5FBF]');
-			expect(getCategoryColor('science-technology')).toBe('bg-[#1D3159]');
-			expect(getCategoryColor('selfHelp-psychology')).toBe('bg-[#8DA633]');
-			expect(getCategoryColor('society-environment')).toBe('bg-[#F2B544]');
-			expect(getCategoryColor('literature-arts')).toBe('bg-[#D9763D]');
+			expect(getCategoryColor('business-economics')).toBe('bg-[#2F4B6E]');
+			expect(getCategoryColor('science-technology')).toBe('bg-[#4F7F78]');
+			expect(getCategoryColor('selfHelp-psychology')).toBe('bg-[#5A7247]');
+			expect(getCategoryColor('society-environment')).toBe('bg-[#A97A2C]');
+			expect(getCategoryColor('literature-arts')).toBe('bg-[#7A3E55]');
 		});
 
 		it('should return default color for invalid category', () => {
-			expect(getCategoryColor('non-existent')).toBe('bg-gray-300');
+			expect(getCategoryColor('non-existent')).toBe('bg-ink-faint');
+		});
+
+		it('should return hex colors matching the color classes', () => {
+			expect(getCategoryHex('business-economics')).toBe('#2F4B6E');
+			expect(getCategoryHex('literature-arts')).toBe('#7A3E55');
+			expect(getCategoryHex('non-existent')).toBe('#8A8277');
 		});
 
 		it('should return correct Korean label for valid category', () => {

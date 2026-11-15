@@ -2,22 +2,19 @@ import {
 	Accordion,
 	AccordionBody,
 	AccordionHeader,
-	Button,
-	Card,
-	CardBody,
 } from '@material-tailwind/react';
 import React from 'react';
 import useAccordion from '../model/useAccordion';
 import {
-	CalendarIcon,
-	ChevronDoubleDownIcon,
-	ChevronDoubleUpIcon,
-	PlusCircleIcon,
-	XMarkIcon,
-} from '@heroicons/react/16/solid';
+	CalendarDaysIcon,
+	ChevronDownIcon,
+	PlusIcon,
+	TrashIcon,
+} from '@heroicons/react/24/outline';
 import DeleteDialog from './DeleteAlert';
 import {
 	getCategoryColor,
+	getCategoryHex,
 	getCategoryKor,
 } from '@/features/create/config/bookEnrollmentConfig';
 import QuoteCardModal from '@/features/capture/ui/Capture';
@@ -44,211 +41,136 @@ const AccordionComponent = ({
 	Category,
 	BookPublisher,
 }: AccordionComponentProps) => {
-	const {
-		open,
-		onClick,
-		krTime,
-		previewData,
-		contentsLength,
-		ifOpenClose,
-		handleClick,
-	} = useAccordion({
-		bookIndex,
-		BookId,
-		BookPublishedDate,
-		BookAuthor,
-		BookTitle,
-		Contents,
-		Category,
-		BookPublisher,
-	});
+	const { open, onClick, krTime, previewData, contentsLength, handleClick } =
+		useAccordion({
+			bookIndex,
+			BookId,
+			BookPublishedDate,
+			BookAuthor,
+			BookTitle,
+			Contents,
+			Category,
+			BookPublisher,
+		});
 
-	const bgUi = (category: string) => {
-		switch (category) {
-			case 'business-economics':
-				return 'bg-gradient-business';
-			case 'science-technology':
-				return 'bg-gradient-science';
-			case 'selfHelp-psychology':
-				return 'bg-gradient-selfhelp';
-			case 'society-environment':
-				return 'bg-gradient-society';
-			case 'literature-arts':
-				return 'bg-gradient-literature';
-			default:
-				return 'bg-gradient';
-		}
-	};
+	const isOpen = open === bookIndex;
 
-	// businessBlue: '#4E5FBF',
-	// scienceNavy: '#1D3159',
-	// selfHelpGreen: '#8DA633',
-	// societyGold: '#F2B544',
-	// literatureOrange: '#D9763D',
-
-	const buttonBorder = (category: string) => {
-		switch (category) {
-			case 'business-economics':
-				return 'businessBlue';
-			case 'science-technology':
-				return 'scienceNavy';
-			case 'selfHelp-psychology':
-				return 'selfHelpGreen';
-			case 'society-environment':
-				return 'societyGold';
-			case 'literature-arts':
-				return 'literatureOrange';
-			default:
-				return 'gray-300';
-		}
-	};
-
-	const iconColor = (category: string) => {
-		switch (category) {
-			case 'business-economics':
-				return '#4E5FBF';
-			case 'science-technology':
-				return '#1D3159';
-			case 'selfHelp-psychology':
-				return '#8DA633';
-			case 'society-environment':
-				return '#F2B544';
-			case 'literature-arts':
-				return '#D9763D';
-			default:
-				return '#B8B8B8';
-		}
-	};
-
+	// overflow-hidden 요소는 세로 flex 안에서 줄어들 수 있으므로 shrink-0으로 고정
 	return (
-		<Card className={`rounded-md ${bgUi(Category)} py-6`}>
-			<CardBody>
-				<Accordion open={open === bookIndex}>
-					<AccordionHeader className="flex flex-col w-full py-0 justify-start items-center gap-3 border-b-0">
-						<div
-							onClick={ifOpenClose}
-							className={`flex w-full flex-col space-y-1 ${
-								open === bookIndex &&
-								'hover:text-gray-500 cursor-pointer transition-colors duration-200 ease-in-out'
+		<article className="paper relative w-full shrink-0 overflow-hidden">
+			{/* 카테고리 색 책등 */}
+			<span
+				aria-hidden
+				className="absolute inset-y-0 left-0 w-1"
+				style={{ backgroundColor: getCategoryHex(Category) }}
+			/>
+			<Accordion
+				open={isOpen}
+				className="pl-6 pr-5 pt-5 pb-3"
+				// 기본 아이콘(크기 없는 SVG) 대신 펼침 표시를 지정
+				icon={
+					<ChevronDownIcon
+						aria-hidden
+						className={`h-5 w-5 text-ink-muted transition-transform duration-300 ${
+							isOpen ? 'rotate-180' : ''
+						}`}
+					/>
+				}
+			>
+				<AccordionHeader
+					onClick={onClick}
+					aria-expanded={isOpen}
+					className="w-full border-b-0 p-0 text-left font-sans text-base font-normal text-ink hover:text-ink"
+				>
+					<div className="flex min-w-0 flex-1 flex-col gap-2">
+						<div className="flex w-full items-center justify-between">
+							<span className="flex items-center gap-2 text-[13px] font-medium text-ink-muted">
+								<span
+									aria-hidden
+									className={`h-2.5 w-2.5 rounded-full ${getCategoryColor(Category)}`}
+								/>
+								{getCategoryKor(Category)}
+							</span>
+							<span className="text-[13px] text-ink-muted">
+								{contentsLength}줄
+							</span>
+						</div>
+						<p
+							className={`font-serif text-[17px] font-bold leading-snug text-ink ${
+								isOpen ? '' : 'line-clamp-2'
 							}`}
 						>
-							<div className="w-full flex items-center justify-between">
-								<div className="flex items-center">
-									<p
-										className={` w-3 h-3 rounded-full font-normal ${getCategoryColor(
-											Category,
-										)}`}
-									/>
-									<p className="text-sm font-light flex-shrink-0 ml-2">
-										{getCategoryKor(Category)}
-									</p>
-								</div>
-								<span className="text-xs text-gray-500">
-									Lines: {contentsLength}
-								</span>
-							</div>
-							<p
-								className={`flex-shrink text-base font-normal ${
-									open === bookIndex ? 'line-clamp-3' : 'line-clamp-1'
-								}`}
-							>
-								{removeParentheses(BookTitle)}
-							</p>
-						</div>
-						{open !== bookIndex && (
-							<div className="w-full flex flex-col gap-3">
-								{previewData &&
-									previewData.map(contents => (
-										<div
-											key={contents.SentenceID}
-											className="text-sm flex line-clamp-1 w-full"
-										>
-											<p className=" font-light flex-shrink line-clamp-2 break-normal whitespace-normal">
-												{contents.Content}
-											</p>
-										</div>
-									))}
-							</div>
-						)}
-					</AccordionHeader>
-					<AccordionBody
-						className={`flex flex-col divide-y divide-gray-300 py-0`}
-					>
+							{removeParentheses(BookTitle)}
+						</p>
+						{!isOpen &&
+							previewData.map(contents => (
+								<p
+									key={contents.SentenceID}
+									className="border-l-2 border-rule pl-3 font-serif text-[15px] leading-[1.75] text-ink-soft line-clamp-2"
+								>
+									{contents.Content}
+								</p>
+							))}
+					</div>
+				</AccordionHeader>
+				<AccordionBody className="py-0 font-sans text-base text-ink">
+					<ul className="mt-3 divide-y divide-rule border-t border-rule">
 						{Contents &&
 							Contents.map(content => (
-								<div
+								<li
 									key={content.SentenceID}
-									className="flex flex-col gap-2 py-7"
+									className="py-5"
 								>
-									{open === bookIndex && (
-										<div
-											className={`w-full flex flex-col gap-1 transition-opacity delay-300 duration-300 ease-in-out ${
-												open === bookIndex ? 'opacity-100' : 'opacity-0'
-											}`}
-										>
-											<div className="text-sm text-black">
-												{content.Content}
-											</div>
-											<div className="w-full flex items-center mt-2">
-												<div className="w-full flex items-center">
-													<CalendarIcon
-														color="#808080FF"
-														className="w-4 h-4 mr-1"
-													/>
-													<p className="text-sm text-gray-500">
-														{krTime(content.Timestamp)}
-													</p>
-												</div>
-												<div className="flex items-center gap-3">
-													<QuoteCardModal
-														bookSentence={content.Content}
-														BookTitle={BookTitle}
-														BookAuthor={BookAuthor}
-														BookPublishedDate={BookPublishedDate}
-														BookPublisher={BookPublisher}
-													/>
-													<DeleteDialog
-														BookId={BookId}
-														sentenceId={content.SentenceID}
-													>
-														<XMarkIcon className="w-4 h-4" />
-													</DeleteDialog>
-												</div>
-											</div>
+									<p className="whitespace-pre-line font-serif text-[16px] leading-[1.8] text-ink">
+										{content.Content}
+									</p>
+									<div className="mt-3 flex items-center justify-between">
+										<p className="flex items-center gap-1 text-[13px] text-ink-muted">
+											<CalendarDaysIcon
+												aria-hidden
+												className="w-4 h-4"
+											/>
+											{krTime(content.Timestamp)}
+										</p>
+										<div className="flex items-center gap-1">
+											<QuoteCardModal
+												bookSentence={content.Content}
+												BookTitle={BookTitle}
+												BookAuthor={BookAuthor}
+												BookPublishedDate={BookPublishedDate}
+												BookPublisher={BookPublisher}
+											/>
+											<DeleteDialog
+												BookId={BookId}
+												sentenceId={content.SentenceID}
+											>
+												<TrashIcon
+													aria-hidden
+													className="w-5 h-5"
+												/>
+											</DeleteDialog>
 										</div>
-									)}
-								</div>
+									</div>
+								</li>
 							))}
-					</AccordionBody>
+					</ul>
+				</AccordionBody>
 
-					<div className="flex w-full relative justify-center items-center pt-3">
-						<Button
-							onClick={handleClick}
-							className={`w-fit absolute left-0 rounded-full text-center py-1 bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-all duration-200 ease-in-out border border-${buttonBorder(
-								Category,
-							)}
-						`}
-						>
-							<PlusCircleIcon
-								color={iconColor(Category)}
-								className={`w-4 h-4 text-${buttonBorder(Category)}`}
-							/>
-						</Button>
-						{open === bookIndex ? (
-							<ChevronDoubleUpIcon
-								onClick={onClick}
-								className="w-6 mx-auto cursor-pointer"
-							/>
-						) : (
-							<ChevronDoubleDownIcon
-								onClick={onClick}
-								className="w-6 mx-auto cursor-pointer"
-							/>
-						)}
-					</div>
-				</Accordion>
-			</CardBody>
-		</Card>
+				<div className="mt-3 flex items-center">
+					<button
+						type="button"
+						onClick={handleClick}
+						className="inline-flex h-9 items-center gap-1 rounded-sm border border-rule px-3 text-[13px] font-medium text-ink-soft transition-colors hover:border-ink hover:text-ink"
+					>
+						<PlusIcon
+							aria-hidden
+							className="w-4 h-4"
+						/>
+						문장 추가
+					</button>
+				</div>
+			</Accordion>
+		</article>
 	);
 };
 

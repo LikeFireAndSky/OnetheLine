@@ -8,8 +8,71 @@
 
 html {
 	scrollbar-width: none;
+	-webkit-text-size-adjust: 100%;
 }
 
 body {
 	-ms-overflow-style: none;
+}
+
+@layer base {
+	body {
+		/* 한국어는 단어 중간에서 줄바꿈하지 않고, 긴 영문/URL만 넘치지 않게 끊음 */
+		word-break: keep-all;
+		overflow-wrap: anywhere;
+		line-height: 1.65;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	::selection {
+		background: theme('colors.seal.wash');
+		color: theme('colors.ink.DEFAULT');
+	}
+}
+
+@layer components {
+	/* 한지 질감: 옅은 섬유 결 + 미세한 티끌 (가독성을 해치지 않도록 아주 약하게) */
+	.hanji-texture {
+		background-color: theme('colors.hanji.DEFAULT');
+		background-image:
+			url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.32' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.38 0 0 0 0 0.28 0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23f)'/></svg>"),
+			url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.36 0 0 0 0 0.27 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+	}
+
+	/* 종이 카드 */
+	.paper {
+		@apply rounded-sm border border-rule bg-hanji-light;
+		box-shadow:
+			0 1px 0 rgba(31, 29, 26, 0.04),
+			0 10px 20px -16px rgba(31, 29, 26, 0.35);
+	}
+
+	/* 먹색 기본 버튼 */
+	.btn-ink {
+		@apply inline-flex h-12 w-full items-center justify-center gap-1.5 rounded-sm bg-ink px-4 text-[15px] font-medium text-hanji-light transition-colors hover:bg-ink-soft focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-seal disabled:cursor-not-allowed disabled:opacity-60;
+	}
+
+	/* 테두리 버튼 */
+	.btn-line {
+		@apply inline-flex h-12 w-full items-center justify-center gap-1.5 rounded-sm border border-ink bg-transparent px-4 text-[15px] font-medium text-ink transition-colors hover:bg-hanji-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-seal disabled:cursor-not-allowed disabled:opacity-60;
+	}
+
+	/* 작은 머리글(라벨) */
+	.eyebrow {
+		@apply text-[13px] font-medium tracking-[0.06em] text-ink-muted;
+	}
+
+	/* 페이지 제목 / 부제 */
+	.page-title {
+		@apply font-serif text-[26px] font-bold leading-tight text-ink;
+	}
+
+	.page-subtitle {
+		@apply font-serif text-[15px] leading-relaxed text-ink-muted;
+	}
+
+	/* 카드 제목 */
+	.card-title {
+		@apply font-serif text-[17px] font-bold leading-snug text-ink;
+	}
 }

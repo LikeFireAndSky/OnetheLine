@@ -1,43 +1,36 @@
 'use client';
 
 import React from 'react';
-import { useInView, animated } from '@react-spring/web';
+import { animated } from '@react-spring/web';
 import MainLog from '@/entities/line/ui/MainLog';
 import { useGetLine } from '@/entities/line/api/useGetLine';
 import LinkButton from '@/entities/line/ui/LinkButton';
 import LinkCard from '../entities/line/ui/LinkCard';
 import LogInButton from '@/processes/user/ui/LogInButton';
 import { StatisticsContainer } from '@/features/statistics/ui/StatisticsContainer';
+import { useFadeIn } from '@/shared/lib/useFadeIn';
 
 const Home = () => {
-	const [ref, inView] = useInView(() => ({
-		from: { opacity: 0 },
-		to: { opacity: 1 },
-		config: {
-			mass: 5,
-			friction: 120,
-			tension: 120,
-		},
-	}));
+	const [ref, fadeIn] = useFadeIn();
 
 	const { data, isLoading, isError } = useGetLine();
 
 	return (
 		<animated.section
 			ref={ref}
-			style={inView}
-			className="w-full h-fit flex flex-col p-3 mt-3 space-y-5"
+			style={fadeIn}
+			className="w-full h-fit flex flex-col px-4 pt-6 pb-8 space-y-6"
 		>
-			<div className="w-full flex flex-col space-y-1">
-				<h1 className="text-2xl font-semibold">One the Line</h1>
-				<p className="text-base">하루를 바꾸는 단 한 줄</p>
+			<div className="w-full flex flex-col gap-1">
+				<h1 className="page-title">One the Line</h1>
+				<p className="page-subtitle">하루를 바꾸는 단 한 줄</p>
 			</div>
 			<MainLog
 				data={data}
 				isLoading={isLoading}
 				isError={isError}
 			/>
-			<div className={`w-full gap-3`}>
+			<div className="w-full">
 				{data && data.isAuthenticated ? (
 					<div className="w-full grid grid-cols-2 gap-3">
 						<LinkButton types="record" />

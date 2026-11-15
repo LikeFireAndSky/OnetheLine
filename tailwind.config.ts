@@ -1,6 +1,15 @@
 import type { Config } from 'tailwindcss';
 const withMT = require('@material-tailwind/react/utils/withMT');
 
+// 한지와 먹 테마: 서체는 app/layout.tsx의 next/font CSS 변수로 주입
+const SANS = [
+	'var(--font-sans)',
+	'Noto Sans KR',
+	'Apple SD Gothic Neo',
+	'sans-serif',
+];
+const SERIF = ['var(--font-serif)', 'Gowun Batang', 'Nanum Myeongjo', 'serif'];
+
 const config: Config = withMT({
 	content: [
 		'./pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -15,37 +24,44 @@ const config: Config = withMT({
 		'./node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx,mdx}',
 	],
 	theme: {
+		// withMT가 Material Tailwind 기본 서체(Roboto)를 이 값으로 교체함
+		fontFamily: {
+			sans: SANS,
+			body: SANS,
+			serif: SERIF,
+		},
 		extend: {
 			colors: {
-				main: '#FF9800',
-				sub: '#FF6E2F',
-				coffee: '#FFE59FFF',
-				grayey: '#B8B8B8FF',
-				greeney: '#C6DFD6',
-				pinkey: '#FFDADAFF',
-				// 'businessBlue'는 "경제/비즈니스" 카테고리용 임의 키워드
-				businessBlue: '#4E5FBF',
-				// 'scienceNavy'는 "과학/기술" 카테고리용 임의 키워드
-				scienceNavy: '#1D3159',
-				// 'selfHelpGreen'은 "자기계발/심리" 카테고리용 임의 키워드
-				selfHelpGreen: '#8DA633',
-				// 'societyGold'는 "사회/환경" 카테고리용 임의 키워드
-				societyGold: '#F2B544',
-				// 'literatureOrange'는 "문학/예술" 카테고리용 임의 키워드
-				literatureOrange: '#D9763D',
+				// 한지(종이) 배경
+				hanji: {
+					DEFAULT: '#F3EEE4',
+					light: '#FAF7F0',
+					deep: '#E8E0D0',
+				},
+				// 먹(글자)
+				ink: {
+					DEFAULT: '#1F1D1A',
+					soft: '#3A3631',
+					muted: '#5E574E',
+					faint: '#8A8277',
+				},
+				// 낙관(도장) 주홍
+				seal: {
+					DEFAULT: '#B5352B',
+					deep: '#8E2820',
+					wash: '#F3DEDA',
+				},
+				// 종이 위의 가는 선
+				rule: '#D9CEBA',
+				// 이용약관/개인정보 페이지의 표 테두리
+				border: {
+					sub: '#D9CEBA',
+				},
 			},
-			backgroundImage: {
-				// 흰색에서 시작해 80% 지점까지 흰색, 이후 해당 카테고리 색상으로 전환
-				'gradient-business':
-					'linear-gradient(137deg, #ffffff 76.4%, #4E5FBF 185.4%)',
-				'gradient-science':
-					'linear-gradient(137deg, #ffffff 76.4%, #1D3159 185.4%)',
-				'gradient-selfhelp':
-					'linear-gradient(137deg, #ffffff 76.4%, #8DA633 185.4%)',
-				'gradient-society':
-					'linear-gradient(137deg, #ffffff 76.4%, #F2B544 185.4%)',
-				'gradient-literature':
-					'linear-gradient(137deg, #ffffff 76.4%, #D9763D 185.4%)',
+			fontSize: {
+				// 이용약관/개인정보 페이지 제목
+				h2: ['1.375rem', { lineHeight: '1.4', fontWeight: '700' }],
+				h3: ['1.125rem', { lineHeight: '1.5', fontWeight: '700' }],
 			},
 
 			spacing: {
@@ -59,17 +75,6 @@ const config: Config = withMT({
 				xs: '375px',
 				sm: '443px',
 				md: '640px',
-			},
-		},
-
-		iconButton: {
-			defaultProps: {
-				variant: 'filled',
-				size: 'md',
-				color: 'blue',
-				fullWidth: true,
-				ripple: true,
-				className: '',
 			},
 		},
 	},

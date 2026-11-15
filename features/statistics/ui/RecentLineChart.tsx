@@ -9,22 +9,21 @@ import {
 	ResponsiveContainer,
 	CartesianGrid,
 } from 'recharts';
-import {
-	Card,
-	CardHeader,
-	CardBody,
-	Typography,
-} from '@material-tailwind/react';
 import { useSession } from 'next-auth/react';
+import { useReducedMotion } from '@react-spring/web';
 import { useRecentCumulative } from '../api/useCategorySummary';
+import { CHART_COLORS, CHART_TICK } from '../config/chartTheme';
+import { ChartCard, ChartMessage } from './ChartCard';
+
+const TITLE = '누적 문장 수 추이';
 
 // ✅ 커스텀 툴팁 컴포넌트
 const CustomTooltip = ({ active, payload, label }: any) => {
 	if (active && payload && payload.length) {
 		return (
-			<div className="bg-white font-light border border-gray-300 px-2 py-1 rounded shadow-sm text-sm text-gray-700">
-				<p className="font-light">{label}</p>
-				<p className="font-semibold">{`누적: ${payload[0].value} 문장`}</p>
+			<div className="paper px-3 py-2 text-[13px]">
+				<p className="text-ink-muted">{label}</p>
+				<p className="font-bold text-ink">{`누적 ${payload[0].value}줄`}</p>
 			</div>
 		);
 	}
@@ -44,24 +43,40 @@ const MOCK_DATA = [
 
 export default function RecentCumulativeChart() {
 	const { status } = useSession();
+	const reduceMotion = !!useReducedMotion();
 	const isLoggedIn = status === 'authenticated';
 
 	const { data, isLoading, isError } = useRecentCumulative();
 
 	// 세션 확인 중이거나 로그인 사용자의 데이터를 불러오는 중이면 로딩 표시
 	if (status === 'loading' || (isLoggedIn && isLoading)) {
-		return <p className="text-center text-gray-500">로딩 중...</p>;
+		return (
+			<ChartMessage
+				title={TITLE}
+				message="데이터를 불러오는 중입니다..."
+			/>
+		);
 	}
 
 	if (isLoggedIn && isError) {
 		return (
-			<p className="text-center text-gray-500">
-				데이터를 불러오지 못했습니다.
-			</p>
+			<ChartMessage
+				title={TITLE}
+				message="데이터를 불러오지 못했습니다."
+			/>
 		);
 	}
 
 	const chartData = isLoggedIn ? data || [] : MOCK_DATA;
+
+	if (chartData.length === 0) {
+		return (
+			<ChartMessage
+				title={TITLE}
+				message="최근 7일 동안 기록한 문장이 없어요."
+			/>
+		);
+	}
 
 	// 누적 최소/최대 계산
 	const values = chartData.map(d => d.cumulative);
@@ -69,56 +84,50 @@ export default function RecentCumulativeChart() {
 	const max = Math.max(...values) + 1;
 
 	return (
-		<Card className="w-full mx-auto">
-			<CardHeader
-				floated={false}
-				shadow={false}
-				className="pb-2"
+		<ChartCard
+			title={TITLE}
+			subtitle={
+				isLoggedIn ? '최근 7일 누적 문장 수' : '샘플 데이터 (로그인 필요)'
+			}
+		>
+			<ResponsiveContainer
+				width="100%"
+				height="100%"
 			>
-				<Typography
-					variant="h6"
-					color="blue-gray"
+				<LineChart
+					data={chartData}
+					margin={{ left: -16, top: 10, bottom: 4, right: 12 }}
 				>
-					📈 누적 문장 수 추이
-				</Typography>
-				<Typography
-					variant="small"
-					color="gray"
-					className="font-light"
-				>
-					{isLoggedIn ? '최근 7일 누적 문장 수' : '샘플 데이터 (로그인 필요)'}
-				</Typography>
-			</CardHeader>
-			<CardBody className="pt-0 h-[300px]">
-				<ResponsiveContainer
-					width="100%"
-					height="100%"
-				>
-					<LineChart
-						data={chartData}
-						margin={{ left: -25, top: 10, bottom: 10, right: 5 }}
-					>
-						<XAxis
-							dataKey="date"
-							fontSize={8}
-						/>
-						<YAxis
-							domain={[min, max]}
-							allowDecimals={false}
-							fontSize={10}
-						/>
-						<Tooltip content={<CustomTooltip />} />
-						<Line
-							type="monotone"
-							dataKey="cumulative"
-							stroke="#4f46e5"
-							strokeWidth={2}
-							dot={{ r: 4 }}
-							activeDot={{ r: 6 }}
-						/>
-					</LineChart>
-				</ResponsiveContainer>
-			</CardBody>
-		</Card>
+					<CartesianGrid
+						vertical={false}
+						stroke={CHART_COLORS.rule}
+						strokeDasharray="3 4"
+					/>
+					<XAxis
+						dataKey="date"
+						tick={CHART_TICK}
+						tickLine={false}
+						axisLine={{ stroke: CHART_COLORS.rule }}
+					/>
+					<YAxis
+						domain={[min, max]}
+						allowDecimals={false}
+						tick={CHART_TICK}
+						tickLine={false}
+						axisLine={false}
+					/>
+					<Tooltip content={<CustomTooltip />} />
+					<Line
+						type="monotone"
+						dataKey="cumulative"
+						stroke={CHART_COLORS.seal}
+						strokeWidth={2}
+						isAnimationActive={!reduceMotion}
+						dot={{ r: 3.5, fill: CHART_COLORS.paper, strokeWidth: 2 }}
+						activeDot={{ r: 5.5 }}
+					/>
+				</LineChart>
+			</ResponsiveContainer>
+		</ChartCard>
 	);
 }

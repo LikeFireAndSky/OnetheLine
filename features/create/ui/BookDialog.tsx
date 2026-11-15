@@ -1,10 +1,4 @@
-import {
-	Dialog,
-	DialogBody,
-	DialogHeader,
-	IconButton,
-	Typography,
-} from '@material-tailwind/react';
+import { Dialog, DialogBody, DialogHeader } from '@material-tailwind/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import React, { memo } from 'react';
 
@@ -28,49 +22,68 @@ const BookDialog = ({
 			size="md"
 			open={open}
 			handler={handleOpen}
+			className="rounded-sm bg-hanji-light"
 		>
-			<DialogHeader className="w-full flex flex-col">
-				<div className="w-full flex  justify-between items-center">
-					<strong className="text-lg font-medium">책 선택하기</strong>
-					<IconButton
-						size="sm"
-						variant="text"
-						className="!absolute right-3.5 top-3.5"
-						onClick={handleOpen}
-					>
-						<XMarkIcon className="h-4 w-4 stroke-2" />
-					</IconButton>
-				</div>
-				<p className="mt-1 text-sm font-thin text-gray-600">
+			<DialogHeader className="relative flex w-full flex-col items-start gap-1 pr-14">
+				<h2 className="font-serif text-[19px] font-bold text-ink">
+					책 선택하기
+				</h2>
+				<p className="font-sans text-[14px] font-normal leading-relaxed text-ink-muted">
 					검색 결과에 나오지 않는 경우 책의 이름을 더욱 자세하게 입력해주세요.
 					(최대 10개까지 보여집니다.)
 				</p>
+				<button
+					type="button"
+					aria-label="닫기"
+					className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-sm text-ink-muted transition-colors hover:bg-hanji-deep hover:text-ink"
+					onClick={handleOpen}
+				>
+					<XMarkIcon
+						aria-hidden
+						className="h-5 w-5"
+					/>
+				</button>
 			</DialogHeader>
-			<DialogBody className="p-4 mb-6 w-full max-h-96 flex flex-col space-y-3 line-clamp-1 overflow-scroll">
-				{isLoading && <Typography>검색중...</Typography>}
-				{isError && <Typography>검색 중 에러가 발생했습니다.</Typography>}
-				{!!searchResults && searchResults.items ? (
-					searchResults.items.map((book: any) => (
-						<div
-							key={book.isbn}
-							onClick={() => handleSelectBook(book)}
-							className="block w-full cursor-pointer rounded-lg border border-gray-300 p-4 text-gray-900"
-						>
-							<div className="w-full block">
-								<p className="font-semibold line-clamp-1 w-full">
+			<DialogBody className="mb-4 flex max-h-96 w-full flex-col gap-2 overflow-y-auto px-4 pt-0">
+				{isLoading && (
+					<p
+						role="status"
+						className="py-4 text-[15px] text-ink-muted"
+					>
+						검색 중...
+					</p>
+				)}
+				{isError && (
+					<p
+						role="alert"
+						className="py-4 text-[15px] text-seal"
+					>
+						검색 중 에러가 발생했습니다.
+					</p>
+				)}
+				{!!searchResults && searchResults.items?.length > 0
+					? searchResults.items.map((book: any) => (
+							<button
+								type="button"
+								key={book.isbn}
+								onClick={() => handleSelectBook(book)}
+								className="w-full rounded-sm border border-rule bg-hanji-light px-4 py-3 text-left transition-colors hover:border-ink hover:bg-hanji"
+							>
+								<p className="font-serif text-[16px] font-bold leading-snug text-ink line-clamp-2">
 									{book.title}
 								</p>
-								<p className="font-normal text-gray-600">
-									{book.author?.length > 0 ? book.author : 'Unknown Author'}
+								<p className="mt-0.5 text-[13px] text-ink-muted line-clamp-1">
+									{book.author?.length > 0 ? book.author : '작가 미상'}
+									{book.publisher ? ` · ${book.publisher}` : ''}
 								</p>
-							</div>
-						</div>
-					))
-				) : (
-					<Typography className="text-gray-500">
-						검색 결과가 없습니다.
-					</Typography>
-				)}
+							</button>
+						))
+					: !isLoading &&
+						!isError && (
+							<p className="py-4 text-[15px] text-ink-muted">
+								검색 결과가 없습니다.
+							</p>
+						)}
 			</DialogBody>
 		</Dialog>
 	);
