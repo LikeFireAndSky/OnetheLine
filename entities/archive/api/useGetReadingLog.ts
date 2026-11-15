@@ -6,10 +6,17 @@ export const getReadingLog = async () => {
 	return response.data;
 };
 
-export const useGetReadingLog = () => {
+/**
+ * 서재(책별 문장 목록) 조회
+ * @param enabled - false면 요청하지 않음 (예: 로그인 전에는 401만 반복되므로 꺼둠)
+ */
+export const useGetReadingLog = ({
+	enabled = true,
+}: { enabled?: boolean } = {}) => {
 	const query = useQuery({
 		queryKey: ['getReadingLog'],
 		queryFn: getReadingLog,
+		enabled,
 
 		retry: 3,
 
