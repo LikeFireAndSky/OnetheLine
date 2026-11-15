@@ -13,7 +13,7 @@
 		"@aws-sdk/client-dynamodb": "^3.682.0",
 		"@aws-sdk/lib-dynamodb": "^3.682.0",
 		"@heroicons/react": "^2.1.5",
-		"@hookform/resolvers": "^3.9.1",
+		"@hookform/resolvers": "^7.0.6",
 		"@material-tailwind/react": "^2.1.10",
 		"@next/third-parties": "^15.5.29",
 		"@react-spring/web": "^9.7.5",
@@ -28,8 +28,8 @@
 		"next-auth": "^4.24.15",
 		"react": "^18",
 		"react-dom": "^18",
-		"react-hook-form": "^7.53.2",
-		"zod": "^3.23.8"
+		"react-hook-form": "^7.92.0",
+		"zod": "^4.6.7"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.26.9",
@@ -51,11 +51,16 @@
 		"identity-obj-proxy": "^3.0.0",
 		"jest": "^29.7.0",
 		"jest-environment-jsdom": "^29.7.0",
-		"next-pwa": "^5.6.0",
-		"postcss": "^8",
+		"postcss": "^8.5.33",
 		"recharts": "^2.15.1",
 		"tailwindcss": "^3.4.1",
 		"ts-jest": "^29.2.6",
 		"typescript": "^5"
+	},
+	"engines": {
+		"node": ">=24"
+	},
+	"overrides": {
+		"postcss": "$postcss"
 	}
 }

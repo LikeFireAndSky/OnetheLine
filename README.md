@@ -33,9 +33,16 @@ Web App)**입니다.
 
 ## 기술 스택
 
-- **Next.js 14 (App Router)**
+- **Next.js 15 (App Router)**, Node.js 24
 - **TypeScript**
-- **AWS**를를 통한 배포 (예시, 실제 배포 환경에 따라 달라질 수 있음)
+- **Amazon Cognito**(Google 로그인) + NextAuth
+- **AWS Amplify Hosting** 배포, **DynamoDB** 저장소
+
+## 로컬 개발
+
+1. Node.js 24 사용 (`.nvmrc` 참고)
+2. `.env.example`을 `.env.local`로 복사한 뒤 값 채우기
+3. `npm ci` → `npm run dev`
 
 ## 도움을 준 사람들
 

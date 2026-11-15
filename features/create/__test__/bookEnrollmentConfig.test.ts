@@ -1,4 +1,5 @@
 // bookEnrollmentConfig.test.ts
+import { z } from 'zod';
 import {
 	getCategoryColor,
 	getCategoryKor,
@@ -64,7 +65,7 @@ describe('Book Enrollment Config', () => {
 			const result = bookSchema.safeParse(invalidData);
 			expect(result.success).toBe(false);
 			if (!result.success) {
-				const errors = result.error.formErrors.fieldErrors;
+				const errors = z.flattenError(result.error).fieldErrors;
 				expect(errors.bookTitle).toContain('책을 검색하여 등록해주세요.');
 				expect(errors.bookIsbn).toContain('ISBN is required.');
 				expect(errors.category).toContain('카테고리를 선택해주세요.');
@@ -80,7 +81,7 @@ describe('Book Enrollment Config', () => {
 			const result = bookSchema.safeParse(invalidData);
 			expect(result.success).toBe(false);
 			if (!result.success) {
-				const errors = result.error.formErrors.fieldErrors;
+				const errors = z.flattenError(result.error).fieldErrors;
 				expect(errors.sentence).toContain('최소 2글자 이상 입력해주세요.');
 			}
 		});
@@ -91,7 +92,7 @@ describe('Book Enrollment Config', () => {
 			const result = bookSchema.safeParse(invalidData);
 			expect(result.success).toBe(false);
 			if (!result.success) {
-				const errors = result.error.formErrors.fieldErrors;
+				const errors = z.flattenError(result.error).fieldErrors;
 				expect(errors.sentence).toContain('최대 500글자까지 입력 가능합니다.');
 			}
 		});
