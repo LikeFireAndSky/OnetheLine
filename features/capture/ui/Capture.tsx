@@ -10,7 +10,7 @@ import {
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { ReadingLog } from '@/app/line/page';
 import { useQuoteCard } from '../model/useCapture';
-import Seal from '@/shared/ui/Seal';
+import PenMark from '@/shared/ui/PenMark';
 
 type QuoteCardModalProps = Pick<
 	ReadingLog,
@@ -120,12 +120,16 @@ const QuoteCardModal = ({
 							{extractYear(BookPublishedDate) || '출판일 미상'}
 							{showPublisher && BookPublisher ? ` · ${BookPublisher}` : ''}
 						</p>
-						{/* 서명: 로고 글자 + 낙관 */}
+						{/* 서명: 로고 글자 + 펜 */}
 						<div className="absolute bottom-[5%] left-0 right-0 flex items-center justify-center gap-2">
 							<p className="m-0 font-serif text-[12px] text-ink-muted">
 								OneTheLine
 							</p>
-							<Seal size="sm" />
+							{/* 이미지 저장 시 currentColor를 읽지 못하므로 색을 직접 지정 */}
+							<PenMark
+								className="h-4 w-4"
+								color="#5E574E"
+							/>
 						</div>
 					</div>
 

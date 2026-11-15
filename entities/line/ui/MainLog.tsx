@@ -4,7 +4,7 @@ import React from 'react';
 import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { useMainLog } from '../model/useMainLog';
 import QuoteCardModal from '@/features/capture/ui/Capture';
-import Seal from '@/shared/ui/Seal';
+import PenMark from '@/shared/ui/PenMark';
 
 // 불러오는 동안 보여줄 자리 표시
 const MainLogSkeleton = () => (
@@ -99,7 +99,7 @@ const MainLog = ({
 								{timeText}
 							</p>
 						</div>
-						<Seal />
+						<PenMark className="h-8 w-8 shrink-0 text-ink-faint" />
 					</footer>
 				</>
 			)}

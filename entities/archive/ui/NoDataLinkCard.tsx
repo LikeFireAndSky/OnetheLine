@@ -1,6 +1,6 @@
 import LinkButton from '@/entities/line/ui/LinkButton';
 import React from 'react';
-import Seal from '@/shared/ui/Seal';
+import PenMark from '@/shared/ui/PenMark';
 
 const NoDataLinkCard = () => {
 	return (
@@ -12,7 +12,7 @@ const NoDataLinkCard = () => {
 						앞으로의 하루들을 바꿀 문장을 지금 바로 기록해보세요.
 					</p>
 				</div>
-				<Seal />
+				<PenMark className="h-9 w-9 shrink-0 text-ink-muted" />
 			</div>
 			<div className="mt-5">
 				<LinkButton types="record" />
