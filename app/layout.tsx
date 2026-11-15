@@ -6,7 +6,8 @@ import {
 } from 'next/font/google';
 import './globals.css';
 import ClientProvider from '@/components/common/ClientProvider';
-import { getSession } from '@/pages/api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/shared/auth/authOptions';
 import Header from '@/widgets/header/ui/Header';
 import Footer from '@/widgets/footer/ui/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -24,7 +25,9 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const server_session = getSession();
+	// 서버에서 세션을 미리 조회해 SessionProvider 초기값으로 전달
+	// (인증 설정 오류가 있어도 로그인/에러 페이지는 렌더링되도록 비로그인으로 처리)
+	const session = await getServerSession(authOptions).catch(() => null);
 
 	return (
 		<html lang="en">
@@ -33,7 +36,7 @@ export default async function RootLayout({
 				content="rKyVP7qe71HP3--SKVXkk6vGzw80qgZ-Z27rHWNwYlM"
 			/>
 			<body className={inter.className}>
-				<ClientProvider session={server_session}>
+				<ClientProvider session={session}>
 					<div className="flex flex-col items-center w-full max-w-[640px] bg-[#F9FAFB] mx-auto h-[100dvh] overflow-hidden">
 						<Header />
 						<main className="w-full flex flex-1 flex-col overflow-scroll mb-3">

@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
 
 export type CategoryStat = {
 	category: string;

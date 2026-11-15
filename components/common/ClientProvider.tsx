@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
+import type { Session } from 'next-auth';
 import { ThemeProvider } from '@material-tailwind/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -12,7 +13,7 @@ const ClientProvider = ({
 	session,
 }: {
 	children: React.ReactNode;
-	session: any;
+	session: Session | null;
 }) => {
 	const [queryClient] = React.useState(
 		() =>

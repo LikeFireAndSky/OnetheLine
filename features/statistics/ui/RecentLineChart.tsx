@@ -43,10 +43,23 @@ const MOCK_DATA = [
 ];
 
 export default function RecentCumulativeChart() {
-	const { data: session, status } = useSession();
+	const { status } = useSession();
 	const isLoggedIn = status === 'authenticated';
 
 	const { data, isLoading, isError } = useRecentCumulative();
+
+	// 세션 확인 중이거나 로그인 사용자의 데이터를 불러오는 중이면 로딩 표시
+	if (status === 'loading' || (isLoggedIn && isLoading)) {
+		return <p className="text-center text-gray-500">로딩 중...</p>;
+	}
+
+	if (isLoggedIn && isError) {
+		return (
+			<p className="text-center text-gray-500">
+				데이터를 불러오지 못했습니다.
+			</p>
+		);
+	}
 
 	const chartData = isLoggedIn ? data || [] : MOCK_DATA;
 
@@ -54,10 +67,6 @@ export default function RecentCumulativeChart() {
 	const values = chartData.map(d => d.cumulative);
 	const min = Math.max(Math.min(...values) - 1, 0);
 	const max = Math.max(...values) + 1;
-
-	if (!isLoggedIn && isLoading) {
-		return <p className="text-center text-gray-500">로딩 중...</p>;
-	}
 
 	return (
 		<Card className="w-full mx-auto">

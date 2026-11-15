@@ -3,7 +3,7 @@
 import { ddbDocClient } from '@/processes/user/lib/ddbDocClient';
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]';
+import { authOptions } from '@/shared/auth/authOptions';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(

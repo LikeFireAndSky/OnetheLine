@@ -1,78 +1,53 @@
-// lib/user.js
-import { GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import {
+	ConditionalCheckFailedException,
+	PutItemCommand,
+} from '@aws-sdk/client-dynamodb';
 import { ddbDocClient } from '../lib/ddbDocClient';
 
+const USERS_TABLE = 'ONE_THE_LINE-Users';
+
 /**
- * 유저 정보 타입 정의
+ * 저장할 유저 정보 타입 정의 (프로바이더 토큰은 저장하지 않음)
  */
-type User = {
+type EnsureUserParams = {
 	userId: string;
-	accessToken: string;
 	name: string;
 	email: string;
-	createdAt: string;
+	provider: string;
 };
 
-/**
- * userId로 유저 정보 조회
- */
-export async function getUserById(userId: string): Promise<User | null> {
-	const params = {
-		TableName: 'ONE_THE_LINE-Users',
-		Key: {
-			userId: { S: userId },
-		},
-	};
-
-	try {
-		const command = new GetItemCommand(params);
-		const data = await ddbDocClient.send(command);
-
-		if (!data.Item) return null;
-
-		return {
-			userId: data.Item.userId?.S || '',
-			accessToken: data.Item.accessToken?.S || '',
-			name: data.Item.name?.S || '',
-			email: data.Item.email?.S || '',
-			createdAt: data.Item.createdAt?.S || '',
-		};
-	} catch (error) {
-		console.error('❌ getUserById failed:', error);
-		throw new Error('Error fetching user');
-	}
-}
+const isConditionalCheckFailed = (error: unknown): boolean =>
+	error instanceof ConditionalCheckFailedException ||
+	(error instanceof Error && error.name === 'ConditionalCheckFailedException');
 
 /**
- * 유저 정보를 저장
+ * 유저가 없을 때만 저장 (이미 있으면 패스)
+ * - 조회 후 저장 대신 조건부 PutItem 한 번으로 처리해 경쟁 상태를 방지
+ * - DynamoDB 오류는 호출한 쪽에서 처리하도록 그대로 던짐
  */
-export async function saveUser({
+export async function ensureUser({
 	userId,
-	accessToken,
 	name,
 	email,
-}: {
-	userId: string;
-	accessToken: string;
-	name: string;
-	email: string;
-}): Promise<void> {
-	const params = {
-		TableName: 'ONE_THE_LINE-Users',
+	provider,
+}: EnsureUserParams): Promise<void> {
+	const command = new PutItemCommand({
+		TableName: USERS_TABLE,
 		Item: {
 			userId: { S: userId },
-			accessToken: { S: accessToken },
 			name: { S: name },
 			email: { S: email },
+			provider: { S: provider },
 			createdAt: { S: new Date().toISOString() },
 		},
-	};
+		ConditionExpression: 'attribute_not_exists(userId)',
+	});
 
 	try {
-		const command = new PutItemCommand(params);
 		await ddbDocClient.send(command);
 	} catch (error) {
-		console.error('❌ saveUser failed:', { userId, error });
-		throw new Error('Error saving user');
+		// 이미 가입된 유저 → 정상 흐름
+		if (isConditionalCheckFailed(error)) return;
+		throw error;
 	}
 }

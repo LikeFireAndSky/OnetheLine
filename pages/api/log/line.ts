@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ddbDocClient } from '@/processes/user/lib/ddbDocClient';
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]';
+import { authOptions } from '@/shared/auth/authOptions';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -103,7 +103,6 @@ export default async function handler(
 		console.error('Failed to fetch data:', error);
 		return res.status(500).json({
 			message: 'Failed to fetch data',
-			error,
 			isEnrolled: false,
 			SentenceCounts: 0,
 			isAuthenticated: true,
